@@ -16,7 +16,7 @@ from lmmp_charts.rendering.plotly.primitives import PlotlyPrimitives
 from lmmp_charts.models import Wettability
 
 HERE = Path(__file__).resolve().parent
-CONFIG = json.loads((HERE.parent.parent / 'examples/interface_config.json').read_text(encoding='utf-8'))
+CONFIG = json.loads((HERE / 'fixtures/interfacial_chart_config.json').read_text(encoding='utf-8'))
 GOLDEN = json.loads((HERE / 'fixtures/v5_plotly_reference.json').read_text(encoding='utf-8'))
 
 
