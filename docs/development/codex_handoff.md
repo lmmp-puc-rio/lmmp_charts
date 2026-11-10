@@ -10,17 +10,18 @@ Desenvolver a biblioteca reutilizável `lmmp_charts` (Python e TypeScript), adot
 - Python `charts/` para a classe pública `InterfacialChart`; `rendering/plotly/interfacial_builder.py` para `InterfacialBuilder`, e futuramente `rendering/svg/interfacial_builder.py`.
 - `geometry/Rectangle`, `geometry/Triangle` e `geometry/CurveGeometry` são genéricos; `geometry/InterfacialGeometry` compõe essas primitivas para calcular coordenadas sem depender de um formato de renderização.
 - **Não utilizar `scene/`.** Abstrações comuns podem ser adicionadas mais tarde mediante necessidade comprovada e aprovação.
-- Python `expressions/` e TypeScript `expressions/` avaliam a mesma gramática matemática declarativa, sem executar código recebido no JSON.
-- Python `InterfacialChart.generate()` por padrão retorna figura Plotly.js `dict` (data, layout, config). Builders recebem resultados da geometria e geram a representação do formato escolhido.
-- Preservar a geometria, os estilos, os traços, as anotações e a posição das fases aprovados.
+- A camada paramétrica fica sob `parametric/`: `expressions/` avalia a gramática declarativa e `svg/` contém o documento/bindings do contrato SVG. O suporte `parametric/plotly` ainda não existe.
+- O avaliador atual inclui geração de SVG paths para o contrato SVG; não considerá-lo implementação de expressões/bindings Plotly.
+- Python `InterfacialChart.generate()` por padrão retorna figura Plotly.js `dict` (data, layout, config). O backend SVG ainda não foi implementado.
+- Referência visual interfacial **v5** congelada; preservar geometria, estilos, traços, anotações e posição das fases.
 - O diagrama usa molhabilidade medida **do lado do fluido molhante**, ângulos absolutos com a relação `0 <= theta_receding < theta < theta_advancing < 90` para renderização.
 - SVG paramétrico: documento versionado `lmmp-parametric-svg/1.0.0`, atualizador genérico TypeScript sem fórmulas de menisco específicas.
 
 ## Estado exato na entrega
 
-Implementado: modelos, geometria, gráfico Plotly de referência, façade `InterfacialChart`, avaliadores de expressões Python/TS, documento SVG paramétrico e cálculo de patches, `PlotlyRenderer` genérico TS, playground HTML local, `uv`/`pyproject.toml`.
+Implementado: modelos, geometria, gráfico Plotly de referência, façade `InterfacialChart`, avaliadores em `parametric/expressions`, documento SVG paramétrico em `parametric/svg` e cálculo de patches, `PlotlyRenderer` genérico TS, playground HTML local, `uv`/`pyproject.toml`.
 
-Não implementado: geração em Python do gráfico interfacial SVG completo, sanitização/atualização do DOM SVG no TypeScript, wrappers React definitivos. Não afirmar que estão concluídos.
+Não implementado: bindings/atualizações paramétricas Plotly, geração em Python do gráfico interfacial SVG completo, sanitização/atualização do DOM SVG no TypeScript, wrappers React definitivos. Não afirmar que estão concluídos.
 
 Versões: pacote Python e npm `0.4.0` (desenvolvimento, sem release); contrato SVG `1.0.0`.
 

@@ -6,8 +6,8 @@ Biblioteca de gráficos científicos LMMP, com API de geração em Python e inte
 
 ## Pacotes
 
-- [`packages/python`](packages/python): `models`, `geometry`, `charts`, `expressions` e `rendering/plotly`; `rendering/svg` está planejado. A classe pública é `InterfacialChart`.
-- [`packages/typescript`](packages/typescript): `PlotlyRenderer` sem dependência de React e avaliador genérico do contrato SVG paramétrico. O controlador DOM SVG e o wrapper React ainda estão pendentes. Nome npm: `@lmmp/charts`.
+- [`packages/python`](packages/python): `models`, `geometry`, `charts`, `parametric/expressions`, `parametric/svg` e `rendering/plotly`; o builder interfacial SVG está planejado. A classe pública é `InterfacialChart`.
+- [`packages/typescript`](packages/typescript): `PlotlyRenderer` sem dependência de React e avaliação do contrato SVG paramétrico (`parametric/expressions` + `parametric/svg`). Bindings paramétricos Plotly, controlador DOM SVG e wrapper React ainda estão pendentes. Nome npm: `@lmmp/charts`.
 - [`docs`](docs): arquitetura, decisões, contrato SVG, relatório e instruções de continuidade para Codex/VS Code.
 
 ## Python — desenvolvimento
