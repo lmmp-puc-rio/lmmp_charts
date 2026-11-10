@@ -13,6 +13,11 @@ of target SVG attribute patches. It does **not** yet embed SVG in a browser,
 render the v5 interfacial diagram from parametric expressions, or provide a
 React component. Approved geometry / Plotly output is unchanged.
 
+The shared evaluator lives under `parametric/expressions/`; the SVG-specific
+document contract and bindings live under `parametric/svg/` in both language
+packages. The current evaluator includes SVG path construction for this
+contract. Parametric Plotly bindings and updates are not implemented.
+
 ## Top-level shape
 
 ```json

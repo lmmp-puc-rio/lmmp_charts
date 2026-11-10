@@ -1,12 +1,10 @@
 # Estrutura de pastas e responsabilidades
 
-Aprovada em 2026-11-05. Não há camada intermediária `scene/`.
+Arquitetura aprovada em 2026-11-10; sem camada intermediária `scene/`.
+Pastas marcadas como planejadas descrevem destinos futuros e não implicam APIs implementadas.
 
 ```text
 lmmp_charts/
-├── .gitignore
-├── AGENTS.md               # Instruções persistentes para Codex no repositório
-├── README.md
 ├── docs/
 │   ├── architecture/       # Estrutura e decisões
 │   ├── specifications/     # Contratos de dados e representações
@@ -15,36 +13,48 @@ lmmp_charts/
 │   ├── python/
 │   │   ├── pyproject.toml   # Build do pacote lmmp-charts com uv
 │   │   └── src/lmmp_charts/
-│   │       ├── models/      # Modelos e validações de entrada
-│   │       ├── geometry/    # Geometria pura e curvas
-│   │       ├── charts/      # Facades públicas: interfacial_chart.py
-│   │       ├── expressions/ # Avaliador e contrato matemático declarativo
-│   │       └── rendering/  # Geração de representações gráficas Python
-│   │           ├── plotly/  # interfacial_builder.py e primitivas específicas
-│   │           └── svg/     # Builder SVG paramétrico PLANEJADO
+│   │       ├── models/      # Modelos e validações de domínio
+│   │       ├── geometry/    # Geometria científica independente de renderizador
+│   │       ├── charts/      # API pública e coordenação, ex.: InterfacialChart
+│   │       ├── parametric/
+│   │       │   ├── expressions/ # Avaliação declarativa compartilhável
+│   │       │   ├── svg/         # Documento, validação e bindings SVG
+│   │       │   └── plotly/      # Bindings paramétricos PLANEJADOS
+│   │       └── rendering/
+│   │           ├── plotly/  # Builder da representação Plotly inicial
+│   │           └── svg/     # Builder do SVG interfacial PLANEJADO
 │   └── typescript/
 │       ├── package.json    # Pacote npm @lmmp/charts
 │       └── src/
-│           ├── types/      # Contratos TypeScript
-│           ├── expressions/# Avaliador declarativo de expressões
-│           ├── parametric/ # Validação e avaliação de bindings SVG
-│           ├── renderers/  # Exibição/atualização gráfica no browser
-│           │   ├── plotly/  # Implementado
-│           │   └── svg/     # Controle do DOM seguro PLANEJADO
-│           └── react/      # Componentes wrappers PLANEJADOS
-├── tests/                  # Python, integração cruzada, referências v5
-└── examples/               # Playground, Django/React previstos, fixtures
+│           ├── types/      # Tipos dos contratos e payloads
+│           ├── parametric/
+│           │   ├── expressions/ # Avaliador equivalente ao Python
+│           │   ├── svg/         # Validação e cálculo de patches SVG
+│           │   └── plotly/      # Interpretação paramétrica PLANEJADA
+│           ├── renderers/
+│           │   ├── plotly/  # Exibição/atualização com Plotly.js
+│           │   └── svg/     # Sanitização e atualização segura PLANEJADAS
+│           └── react/      # Wrappers React PLANEJADOS
+├── tests/
+│   ├── python/              # Testes unitários da biblioteca Python
+│   ├── integration/         # Fixtures de paridade entre linguagens
+│   └── renderer/            # Testes de integração/browser
+└── examples/                # Exemplos e playground local
 ```
 
-## Fluxos
+## Responsabilidades e fluxos
 
-Python: `models` -> `charts` + `geometry` -> `rendering/plotly` -> JSON Plotly -> TypeScript `renderers/plotly`.
-
-SVG (planejado): `models` -> `charts` + `geometry` + `expressions` -> `rendering/svg` -> `ParametricSvgDocument` -> TypeScript `expressions` + `parametric` + `renderers/svg` -> React.
+- `models/` valida configurações científicas; `geometry/` calcula coordenadas sem dependência de renderizador.
+- `charts/` expõe a API pública e coordena as partes do gráfico sem absorver as implementações específicas de tecnologia.
+- Em Python, `rendering/<technology>/` produz a representação inicial. O fluxo Plotly implementado é `models` + `geometry` -> `charts/InterfacialChart` -> `rendering/plotly` -> payload Plotly.
+- `parametric/expressions/` avalia a gramática declarativa. O módulo atual também inclui construção de SVG path usada pelo contrato SVG; não há ainda consumidor paramétrico Plotly.
+- `parametric/svg/` contém o documento versionado `lmmp-parametric-svg` e calcula patches SVG; isso não sanitiza nem insere markup no DOM.
+- `parametric/plotly/` é reservado para definir como valores/bindings paramétricos se relacionarão a `data`/`layout` Plotly. Continua planejado até haver contrato aprovado e implementação.
+- No TypeScript, `renderers/<technology>/` exibe/atualiza no navegador; não duplica fórmulas científicas específicas.
 
 ## Design dos Builders
 
 - `charts/interfacial_chart.py` define `InterfacialChart`, interface pública e coordenação.
-- `rendering/plotly/interfacial_builder.py` define `InterfacialBuilder`, especialista em construir as representações Plotly usando a geometria compartilhada.
-- `rendering/svg/interfacial_builder.py` terá futuramente outro `InterfacialBuilder` no namespace SVG. A duplicidade de nomes simples em namespaces diferentes é intencional, não é duplicidade de geometria.
+- `rendering/plotly/interfacial_builder.py` define `InterfacialBuilder`, que constrói a representação Plotly usando a geometria compartilhada.
+- `rendering/svg/interfacial_builder.py` poderá futuramente definir outro `InterfacialBuilder` no namespace SVG; essa implementação não existe ainda.
 - Primitivas compartilhadas são preferíveis quando úteis. Não introduzir `scene/` sem decisão explícita.
