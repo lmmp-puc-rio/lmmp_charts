@@ -1,0 +1,431 @@
+[
+  {
+    "overrides": {
+      "theta": 5,
+      "theta_advancing": 11,
+      "theta_receding": 1
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 70.30442415266036
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 143.02754058018735
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 5°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 71.469825 134.73528"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 10,
+      "theta_advancing": 16,
+      "theta_receding": 6
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 71.21537975902336
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 136.10814578664557
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 10°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 73.099064 127.949012"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 20,
+      "theta_advancing": 26,
+      "theta_receding": 16
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 74.82459033712732
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 122.63838853394651
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 20°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 78.096476 114.930308"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 30,
+      "theta_advancing": 36,
+      "theta_receding": 26
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 80.7179676972449
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 110.0
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 30°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 85.27864 102.97718"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 45,
+      "theta_advancing": 51,
+      "theta_receding": 41
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 93.4314575050762
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 93.4314575050762
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 45°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 99.654369 87.828323"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 55,
+      "theta_advancing": 61,
+      "theta_receding": 51
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 104.1138850919163
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 84.46783645688066
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 55°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 111.21523 80.030423"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 59,
+      "theta_advancing": 65,
+      "theta_receding": 55
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 108.79695400719567
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 81.42661594383101
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 59°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 116.190539 77.495377"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 60,
+      "theta_advancing": 66,
+      "theta_receding": 56
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 110.0
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 80.71796769724492
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 60°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 117.461069 76.916363"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 61,
+      "theta_advancing": 67,
+      "theta_receding": 57
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 111.21523038029304
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 80.03042342884834
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 61°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 118.74151 76.359612"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 70,
+      "theta_advancing": 76,
+      "theta_receding": 66
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 122.6383885339465
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 74.82459033712733
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 70°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 130.646248 72.376342"
+      }
+    ]
+  },
+  {
+    "overrides": {
+      "theta": 80,
+      "theta_advancing": 86,
+      "theta_receding": 76
+    },
+    "patches": [
+      {
+        "target": "tangent",
+        "attribute": "x2",
+        "value": 136.10814578664557
+      },
+      {
+        "target": "tangent",
+        "attribute": "y2",
+        "value": 71.21537975902336
+      },
+      {
+        "target": "theta-label",
+        "attribute": "textContent",
+        "value": "θ = 80°"
+      },
+      {
+        "target": "fluid-label",
+        "attribute": "textContent",
+        "value": "Salmoura"
+      },
+      {
+        "target": "wetting-region",
+        "attribute": "fill",
+        "value": "#4472C4"
+      },
+      {
+        "target": "advancing",
+        "attribute": "d",
+        "value": "M 150 150 L 144.419482 70.194876"
+      }
+    ]
+  }
+]

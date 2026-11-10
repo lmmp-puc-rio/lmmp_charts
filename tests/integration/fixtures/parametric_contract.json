@@ -1,0 +1,249 @@
+{
+  "format": "lmmp-parametric-svg",
+  "version": "1.0.0",
+  "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 300 200\"><line id=\"tangent\" x1=\"150\" y1=\"150\" x2=\"93\" y2=\"93\" stroke=\"black\"/><path id=\"advancing\" d=\"M 150 150 L 129 73\" stroke=\"white\"/><text id=\"theta-label\">θ = 45°</text><text id=\"fluid-label\">Salmoura</text><rect id=\"wetting-region\" x=\"0\" y=\"0\" width=\"50\" height=\"40\" fill=\"#4472C4\"/></svg>",
+  "parameters": {
+    "theta": {
+      "type": "number",
+      "value": 45,
+      "min": 0,
+      "max": 89,
+      "unit": "deg"
+    },
+    "theta_advancing": {
+      "type": "number",
+      "value": 75,
+      "min": 0,
+      "max": 89,
+      "unit": "deg"
+    },
+    "theta_receding": {
+      "type": "number",
+      "value": 25,
+      "min": 0,
+      "max": 89,
+      "unit": "deg"
+    },
+    "wetting.name": {
+      "type": "string",
+      "value": "Salmoura"
+    },
+    "wetting.color": {
+      "type": "string",
+      "value": "#4472C4"
+    }
+  },
+  "bindings": [
+    {
+      "target": "tangent",
+      "attribute": "x2",
+      "expression": {
+        "op": "sub",
+        "args": [
+          {
+            "const": 150
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "const": 80
+              },
+              {
+                "op": "cos",
+                "args": [
+                  {
+                    "op": "radians",
+                    "args": [
+                      {
+                        "var": "theta"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "target": "tangent",
+      "attribute": "y2",
+      "expression": {
+        "op": "sub",
+        "args": [
+          {
+            "const": 150
+          },
+          {
+            "op": "mul",
+            "args": [
+              {
+                "const": 80
+              },
+              {
+                "op": "sin",
+                "args": [
+                  {
+                    "op": "radians",
+                    "args": [
+                      {
+                        "var": "theta"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "target": "theta-label",
+      "attribute": "textContent",
+      "expression": {
+        "op": "concat",
+        "args": [
+          {
+            "const": "θ = "
+          },
+          {
+            "var": "theta"
+          },
+          {
+            "const": "°"
+          }
+        ]
+      }
+    },
+    {
+      "target": "fluid-label",
+      "attribute": "textContent",
+      "expression": {
+        "var": "wetting.name"
+      }
+    },
+    {
+      "target": "wetting-region",
+      "attribute": "fill",
+      "expression": {
+        "var": "wetting.color"
+      }
+    },
+    {
+      "target": "advancing",
+      "attribute": "d",
+      "expression": {
+        "op": "path",
+        "commands": [
+          {
+            "cmd": "M",
+            "values": [
+              {
+                "const": 150
+              },
+              {
+                "const": 150
+              }
+            ]
+          },
+          {
+            "cmd": "L",
+            "values": [
+              {
+                "op": "sub",
+                "args": [
+                  {
+                    "const": 150
+                  },
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "const": 80
+                      },
+                      {
+                        "op": "cos",
+                        "args": [
+                          {
+                            "op": "radians",
+                            "args": [
+                              {
+                                "var": "theta_advancing"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "op": "sub",
+                "args": [
+                  {
+                    "const": 150
+                  },
+                  {
+                    "op": "mul",
+                    "args": [
+                      {
+                        "const": 80
+                      },
+                      {
+                        "op": "sin",
+                        "args": [
+                          {
+                            "op": "radians",
+                            "args": [
+                              {
+                                "var": "theta_advancing"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "message": "Recuo deve ser menor que theta",
+      "expression": {
+        "op": "lt",
+        "args": [
+          {
+            "var": "theta_receding"
+          },
+          {
+            "var": "theta"
+          }
+        ]
+      }
+    },
+    {
+      "message": "Avanço deve ser maior que theta",
+      "expression": {
+        "op": "lt",
+        "args": [
+          {
+            "var": "theta"
+          },
+          {
+            "var": "theta_advancing"
+          }
+        ]
+      }
+    }
+  ]
+}

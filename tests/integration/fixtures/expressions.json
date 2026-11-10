@@ -1,0 +1,284 @@
+{
+  "numbers": {
+    "variables": {
+      "theta": 45,
+      "x": 12,
+      "y": 3
+    },
+    "cases": [
+      {
+        "name": "mul+cos",
+        "expression": {
+          "op": "mul",
+          "args": [
+            {
+              "const": 80
+            },
+            {
+              "op": "cos",
+              "args": [
+                {
+                  "op": "radians",
+                  "args": [
+                    {
+                      "var": "theta"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "expected": 56.5685424949238
+      },
+      {
+        "name": "sin+add",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "const": 100
+            },
+            {
+              "op": "mul",
+              "args": [
+                {
+                  "const": 30
+                },
+                {
+                  "op": "sin",
+                  "args": [
+                    {
+                      "op": "radians",
+                      "args": [
+                        {
+                          "var": "theta"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "expected": 121.21320343559643
+      },
+      {
+        "name": "arithmetic",
+        "expression": {
+          "op": "sub",
+          "args": [
+            {
+              "op": "div",
+              "args": [
+                {
+                  "op": "pow",
+                  "args": [
+                    {
+                      "var": "x"
+                    },
+                    {
+                      "const": 2
+                    }
+                  ]
+                },
+                {
+                  "var": "y"
+                }
+              ]
+            },
+            {
+              "const": 2
+            }
+          ]
+        },
+        "expected": 46
+      },
+      {
+        "name": "roundtrip radians",
+        "expression": {
+          "op": "degrees",
+          "args": [
+            {
+              "op": "radians",
+              "args": [
+                {
+                  "var": "theta"
+                }
+              ]
+            }
+          ]
+        },
+        "expected": 45
+      },
+      {
+        "name": "sqrt",
+        "expression": {
+          "op": "sqrt",
+          "args": [
+            {
+              "const": 25
+            }
+          ]
+        },
+        "expected": 5
+      },
+      {
+        "name": "minmax",
+        "expression": {
+          "op": "max",
+          "args": [
+            {
+              "op": "min",
+              "args": [
+                {
+                  "var": "x"
+                },
+                {
+                  "const": 5
+                }
+              ]
+            },
+            {
+              "var": "y"
+            }
+          ]
+        },
+        "expected": 5
+      },
+      {
+        "name": "atan2",
+        "expression": {
+          "op": "atan2",
+          "args": [
+            {
+              "const": 1
+            },
+            {
+              "const": 1
+            }
+          ]
+        },
+        "expected": 0.7853981633974483
+      },
+      {
+        "name": "lt",
+        "expression": {
+          "op": "lt",
+          "args": [
+            {
+              "var": "x"
+            },
+            {
+              "const": 13
+            }
+          ]
+        },
+        "expected": true
+      },
+      {
+        "name": "eq numeric",
+        "expression": {
+          "op": "eq",
+          "args": [
+            {
+              "const": 1
+            },
+            {
+              "const": 1.0
+            }
+          ]
+        },
+        "expected": true
+      },
+      {
+        "name": "text",
+        "expression": {
+          "op": "concat",
+          "args": [
+            {
+              "const": "θ = "
+            },
+            {
+              "var": "theta"
+            },
+            {
+              "const": "°"
+            }
+          ]
+        },
+        "expected": "θ = 45°"
+      },
+      {
+        "name": "conditional lazy",
+        "expression": {
+          "op": "if",
+          "args": [
+            {
+              "op": "gt",
+              "args": [
+                {
+                  "var": "theta"
+                },
+                {
+                  "const": 40
+                }
+              ]
+            },
+            {
+              "const": 10
+            },
+            {
+              "op": "div",
+              "args": [
+                {
+                  "const": 1
+                },
+                {
+                  "const": 0
+                }
+              ]
+            }
+          ]
+        },
+        "expected": 10
+      },
+      {
+        "name": "path",
+        "expression": {
+          "op": "path",
+          "commands": [
+            {
+              "cmd": "M",
+              "values": [
+                {
+                  "const": 0
+                },
+                {
+                  "const": 0
+                }
+              ]
+            },
+            {
+              "cmd": "L",
+              "values": [
+                {
+                  "const": 37.5
+                },
+                {
+                  "const": 4
+                }
+              ]
+            },
+            {
+              "cmd": "Z",
+              "values": []
+            }
+          ]
+        },
+        "expected": "M 0 0 L 37.5 4 Z"
+      }
+    ]
+  }
+}

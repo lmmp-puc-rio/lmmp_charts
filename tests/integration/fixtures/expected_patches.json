@@ -1,0 +1,66 @@
+{
+  "initial": [
+    {
+      "target": "tangent",
+      "attribute": "x2",
+      "value": 93.4314575050762
+    },
+    {
+      "target": "tangent",
+      "attribute": "y2",
+      "value": 93.4314575050762
+    },
+    {
+      "target": "theta-label",
+      "attribute": "textContent",
+      "value": "θ = 45°"
+    },
+    {
+      "target": "fluid-label",
+      "attribute": "textContent",
+      "value": "Salmoura"
+    },
+    {
+      "target": "wetting-region",
+      "attribute": "fill",
+      "value": "#4472C4"
+    },
+    {
+      "target": "advancing",
+      "attribute": "d",
+      "value": "M 150 150 L 129.294476 72.725934"
+    }
+  ],
+  "updated": [
+    {
+      "target": "tangent",
+      "attribute": "x2",
+      "value": 84.46783645688066
+    },
+    {
+      "target": "tangent",
+      "attribute": "y2",
+      "value": 104.11388509191632
+    },
+    {
+      "target": "theta-label",
+      "attribute": "textContent",
+      "value": "θ = 35°"
+    },
+    {
+      "target": "fluid-label",
+      "attribute": "textContent",
+      "value": "Salmoura"
+    },
+    {
+      "target": "wetting-region",
+      "attribute": "fill",
+      "value": "#4472C4"
+    },
+    {
+      "target": "advancing",
+      "attribute": "d",
+      "value": "M 150 150 L 136.108146 71.21538"
+    }
+  ]
+}
