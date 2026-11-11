@@ -1,4 +1,4 @@
-"""Regression tests for the parametric Python SVG interfacial builder."""
+"""Unit tests for the parametric Python SVG interfacial builder."""
 
 from __future__ import annotations
 

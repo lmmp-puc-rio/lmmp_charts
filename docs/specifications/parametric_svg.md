@@ -8,10 +8,11 @@ This is a **transport contract version**, independent of the `lmmp_charts`
 ## Implemented scope
 
 This increment implements (a) the same JSON expression evaluator in Python
-and TypeScript, (b) a typed/validated parametric document and (c) calculation
-of target SVG attribute patches. It does **not** yet embed SVG in a browser,
-render the v5 interfacial diagram from parametric expressions, or provide a
-React component. Approved geometry / Plotly output is unchanged.
+and TypeScript, (b) a typed/validated parametric document, (c) calculation
+of target SVG attribute patches and (d) a Python builder that generates the
+complete v5 interfacial diagram with parametric angle, color, and text
+bindings. It does **not** embed SVG in a browser or provide a React component.
+Approved geometry / Plotly output is unchanged.
 
 The shared evaluator lives under `parametric/expressions/`; the SVG-specific
 document contract and bindings live under `parametric/svg/` in both language
@@ -101,12 +102,9 @@ validation before DOM application.
 
 ## Future work
 
-1. Use Python geometry models to emit `ParametricSvgDocument` expressions for
-   the **exact approved v5 interfacial diagram**, testing matching points and
-   appearance.
-2. Implement the generic SVG DOM controller with sanitization, differential
+1. Implement the generic SVG DOM controller with sanitization, differential
    updates, and `requestAnimationFrame` batching; no reload or HTTP per slider.
-3. Add the React wrapper and cross-language/browser regression tests.
+2. Add the React wrapper and cross-language/browser regression tests.
 
 ## Running tests
 
