@@ -6,7 +6,7 @@ Biblioteca de gráficos científicos LMMP, com API de geração em Python e inte
 
 ## Pacotes
 
-- [`packages/python`](packages/python): `models`, `geometry`, `charts`, `parametric/expressions`, `parametric/svg` e `rendering/plotly`; o builder interfacial SVG está planejado. A classe pública é `InterfacialChart`.
+- [`packages/python`](packages/python): `models`, `geometry`, `charts`, `parametric/expressions`, `parametric/svg`, `rendering/plotly` e o builder SVG paramétrico em `rendering/svg`. A classe pública é `InterfacialChart`.
 - [`packages/typescript`](packages/typescript): `PlotlyRenderer` sem dependência de React e avaliação do contrato SVG paramétrico (`parametric/expressions` + `parametric/svg`). Bindings paramétricos Plotly, controlador DOM SVG e wrapper React ainda estão pendentes. Nome npm: `@lmmp/charts`.
 - [`docs`](docs): arquitetura, decisões, contrato SVG, relatório e instruções de continuidade para Codex/VS Code.
 
@@ -64,4 +64,4 @@ Leia primeiro [`AGENTS.md`](AGENTS.md) e [`docs/development/codex_handoff.md`](d
 - [Validação da reorganização](docs/development/validation_2026-11-05.md)
 - [Relatório anterior de integração](docs/development/integration_report_previous.md)
 
-**Limites atuais:** o SVG interfacial parametrizado completo, um renderizador de SVG seguro no browser e os componentes React ainda não foram implementados. O contrato SVG atual só valida parâmetros/expressões e calcula patches; o SVG embutido não está sanitizado para inserção direta no DOM. Não alterar a geometria ou aparência da referência visual v5 sem aprovação explícita.
+**Limites atuais:** o builder Python gera o SVG interfacial completo e seus bindings paramétricos, mas o markup não é sanitizado para inserção direta no DOM. O renderizador SVG seguro no browser e os componentes React ainda não foram implementados. Não alterar a geometria ou aparência da referência visual v5 sem aprovação explícita.

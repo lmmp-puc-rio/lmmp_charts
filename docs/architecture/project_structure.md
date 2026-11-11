@@ -26,7 +26,7 @@ lmmp_charts/
 │   │       │   └── plotly/      # Bindings paramétricos PLANEJADOS
 │   │       └── rendering/
 │   │           ├── plotly/  # Builder da representação Plotly inicial
-│   │           └── svg/     # Builder do SVG interfacial PLANEJADO
+│   │           └── svg/     # Builder SVG interfacial paramétrico
 │   └── typescript/
 │       ├── package.json    # Pacote npm @lmmp/charts
 │       └── src/
@@ -52,6 +52,7 @@ lmmp_charts/
 - `charts/` expõe a API pública e coordena as partes do gráfico sem absorver as implementações específicas de tecnologia.
 - Em Python, `rendering/<technology>/` produz a representação inicial. O fluxo Plotly implementado é `models` + `geometry` -> `charts/InterfacialChart` -> `rendering/plotly` -> payload Plotly.
 - `geometry/Rectangle`, `geometry/Triangle` e `geometry/CurveGeometry` são componentes geométricos sem conhecimento de gráficos específicos. `geometry/InterfacialGeometry` compõe essas primitivas para calcular as regiões e curvas interfaciais.
+- `rendering/svg/InterfacialBuilder` usa `geometry/` para gerar o diagrama v5 completo como `ParametricSvgDocument`, com bindings para ângulos, cores e textos. Ele não sanitiza markup para inserção no DOM.
 - `parametric/expressions/` avalia a gramática declarativa. O módulo atual também inclui construção de SVG path usada pelo contrato SVG; não há ainda consumidor paramétrico Plotly.
 - `parametric/svg/` contém o documento versionado `lmmp-parametric-svg` e calcula patches SVG; isso não sanitiza nem insere markup no DOM.
 - `parametric/plotly/` é reservado para definir como valores/bindings paramétricos se relacionarão a `data`/`layout` Plotly. Continua planejado até haver contrato aprovado e implementação.
@@ -70,5 +71,5 @@ ao próprio diagrama. O arquivo-fonte editável está em
 
 - `charts/interfacial_chart.py` define `InterfacialChart`, interface pública e coordenação.
 - `rendering/plotly/interfacial_builder.py` define `InterfacialBuilder`, que constrói a representação Plotly usando a geometria compartilhada.
-- `rendering/svg/interfacial_builder.py` poderá futuramente definir outro `InterfacialBuilder` no namespace SVG; essa implementação não existe ainda.
+- `rendering/svg/interfacial_builder.py` define um `InterfacialBuilder` separado no namespace SVG; ele produz um documento paramétrico sem alterar a saída Plotly padrão.
 - Primitivas compartilhadas são preferíveis quando úteis. Não introduzir `scene/` sem decisão explícita.
