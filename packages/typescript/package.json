@@ -1,0 +1,29 @@
+{
+  "name": "@lmmp/charts",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "description": "Framework-agnostic Plotly renderer and parametric SVG expression contract for LMMP applications",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "plotly.js-dist-min": ">=3.3.1 <5"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  }
+}
