@@ -15,6 +15,10 @@ lmmp_charts/
 │   │   └── src/lmmp_charts/
 │   │       ├── models/      # Modelos e validações de domínio
 │   │       ├── geometry/    # Geometria científica independente de renderizador
+│   │       │   ├── curves.py      # Operações matemáticas para curvas
+│   │       │   ├── rectangle.py   # Primitiva Rectangle
+│   │       │   ├── triangle.py    # Primitiva Triangle
+│   │       │   └── interfacial.py # Cálculo de regiões e meniscos
 │   │       ├── charts/      # API pública e coordenação, ex.: InterfacialChart
 │   │       ├── parametric/
 │   │       │   ├── expressions/ # Avaliação declarativa compartilhável
@@ -47,7 +51,8 @@ lmmp_charts/
 - `models/` valida configurações científicas; `geometry/` calcula coordenadas sem dependência de renderizador.
 - `charts/` expõe a API pública e coordena as partes do gráfico sem absorver as implementações específicas de tecnologia.
 - Em Python, `rendering/<technology>/` produz a representação inicial. O fluxo Plotly implementado é `models` + `geometry` -> `charts/InterfacialChart` -> `rendering/plotly` -> payload Plotly.
-- `rendering/svg/InterfacialBuilder` usa `geometry/` para gerar o diagrama v5 completo como `ParametricSvgDocument`, com bindings para ângulos, cores e textos. Ele não sanitiza markup para inserção no DOM.
+- `geometry/Rectangle`, `geometry/Triangle` e `geometry/CurveGeometry` são componentes geométricos sem conhecimento de gráficos específicos. `geometry/InterfacialGeometry` compõe essas primitivas para calcular as regiões e curvas interfaciais.
+- `rendering/svg/InterfacialBuilder` usa `InterfacialGeometry` para gerar o SVG paramétrico completo como `ParametricSvgDocument`, com bindings para ângulos, cores e textos. Ele não sanitiza markup para inserção no DOM.
 - `parametric/expressions/` avalia a gramática declarativa. O módulo atual também inclui construção de SVG path usada pelo contrato SVG; não há ainda consumidor paramétrico Plotly.
 - `parametric/svg/` contém o documento versionado `lmmp-parametric-svg` e calcula patches SVG; isso não sanitiza nem insere markup no DOM.
 - `parametric/plotly/` é reservado para definir como valores/bindings paramétricos se relacionarão a `data`/`layout` Plotly. Continua planejado até haver contrato aprovado e implementação.

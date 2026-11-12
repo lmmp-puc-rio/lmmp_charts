@@ -16,7 +16,7 @@ PointArray = NDArray[np.float64]
 
 
 class CurveGeometry:
-    """Stateless mathematical helpers shared by chart geometries."""
+    """Stateless mathematical helpers for 2D coordinate calculations."""
 
     @staticmethod
     def direction(degrees: float) -> PointArray:
