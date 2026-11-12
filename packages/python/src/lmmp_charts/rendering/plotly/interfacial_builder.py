@@ -7,18 +7,17 @@ from typing import Any
 
 import plotly.graph_objects as go
 
-from lmmp_charts.geometry.rectangle import RectangleGeometry
-from lmmp_charts.geometry.triangle import TriangleGeometry
+from lmmp_charts.geometry.interfacial import InterfacialGeometry
 from lmmp_charts.models.wettability import Wettability
 
 from .primitives import PlotlyPrimitives as Draw
-from .rectangle import RectanglePlotlyRenderer
+from .flat_interface import FlatInterfacePlotlyRenderer
 from .styles import FIGURE_LAYOUT, RENDER_CONFIG
-from .triangle import TrianglePlotlyRenderer
+from .corner_interface import CornerInterfacePlotlyRenderer
 
 
 class InterfacialBuilder:
-    """Build the exact approved v5 figure from a typed wettability model.
+    """Build the approved figure from a typed wettability model.
 
     This backend is independent of Django and any JavaScript rendering library.
     It returns a Plotly Figure or a JSON-compatible mapping. An application-level
@@ -26,27 +25,21 @@ class InterfacialBuilder:
     """
 
     def __init__(self) -> None:
-        self._flat_geometry = RectangleGeometry()
-        self._corner_geometry = TriangleGeometry()
-        self._flat_renderer = RectanglePlotlyRenderer()
-        self._corner_renderer = TrianglePlotlyRenderer()
+        self._geometry = InterfacialGeometry()
+        self._flat_renderer = FlatInterfacePlotlyRenderer()
+        self._corner_renderer = CornerInterfacePlotlyRenderer()
 
     def build(self, model: Wettability) -> go.Figure:
-        """Build a native Plotly figure, preserving v5 trace/annotation order."""
+        """Build a native Plotly figure, preserving trace and annotation order."""
         if not isinstance(model, Wettability):
             raise TypeError("InterfacialBuilder requires a Wettability instance")
         if not (0 <= model.theta_receding < model.theta < model.theta_advancing < 90):
             raise ValueError("The approved interfacial figure requires angles < 90°")
 
+        geometry = self._geometry.calculate(model)
         fig = go.Figure()
-        self._flat_renderer.draw(fig, self._flat_geometry.calculate(model.theta), model)
-        self._corner_renderer.draw(
-            fig,
-            self._corner_geometry.calculate(
-                model.theta, model.theta_advancing, model.theta_receding,
-            ),
-            model,
-        )
+        self._flat_renderer.draw(fig, geometry.flat_interface, model)
+        self._corner_renderer.draw(fig, geometry.corner_interface, model)
         Draw.text(fig, 6.0, 16.21, "Interfaces", size=31)
         fig.update_layout(**FIGURE_LAYOUT)
         return fig

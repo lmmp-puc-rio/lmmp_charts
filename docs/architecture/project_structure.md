@@ -25,7 +25,10 @@ lmmp_charts/
 │   │       │   ├── svg/         # Documento, validação e bindings SVG
 │   │       │   └── plotly/      # Bindings paramétricos PLANEJADOS
 │   │       └── rendering/
-│   │           ├── plotly/  # Builder da representação Plotly inicial
+│   │           ├── plotly/
+│   │           │   ├── interfacial_builder.py # Composição da figura Plotly
+│   │           │   ├── flat_interface.py      # Interface plana
+│   │           │   └── corner_interface.py     # Interface no canto
 │   │           └── svg/     # Builder SVG interfacial paramétrico
 │   └── typescript/
 │       ├── package.json    # Pacote npm @lmmp/charts
@@ -62,5 +65,6 @@ lmmp_charts/
 
 - `charts/interfacial_chart.py` define `InterfacialChart`, interface pública e coordenação.
 - `rendering/plotly/interfacial_builder.py` define `InterfacialBuilder`, que constrói a representação Plotly usando a geometria compartilhada.
+- Os renderers Plotly ficam em módulos nomeados pelo componente físico representado (`flat_interface.py` e `corner_interface.py`), não pelas primitivas geométricas usadas no cálculo.
 - `rendering/svg/interfacial_builder.py` define um `InterfacialBuilder` separado no namespace SVG; ele produz um documento paramétrico sem alterar a saída Plotly padrão.
 - Primitivas compartilhadas são preferíveis quando úteis. Não introduzir `scene/` sem decisão explícita.

@@ -1,24 +1,23 @@
-"""Plotly renderer for the approved v5 triangular throat corner."""
+"""Plotly renderer for an interface in a solid corner."""
 
 from __future__ import annotations
 
-import numpy as np
 import plotly.graph_objects as go
 
 from lmmp_charts.geometry.curves import CurveGeometry
-from lmmp_charts.geometry.triangle import TriangleCoordinates
+from lmmp_charts.geometry.interfacial import CornerInterfaceCoordinates
 from lmmp_charts.models.wettability import Wettability
 
 from .primitives import PlotlyPrimitives as Draw
 
 
-class TrianglePlotlyRenderer:
-    """Render the approved meniscus, tangent and absolute hysteresis rays."""
+class CornerInterfacePlotlyRenderer:
+    """Render a corner meniscus, tangent and absolute hysteresis rays."""
 
-    def draw(self, fig: go.Figure, geom: TriangleCoordinates, model: Wettability) -> None:
+    def draw(self, fig: go.Figure, geom: CornerInterfaceCoordinates, model: Wettability) -> None:
         Q = geom.lower_contact
-        Draw.polygon(fig, geom.non_wetting_polygon, model.non_wetting_fluid.color)
-        Draw.polygon(fig, geom.wetting_polygon, model.wetting_fluid.color)
+        Draw.polygon(fig, geom.non_wetting_region, model.non_wetting_fluid.color)
+        Draw.polygon(fig, geom.wetting_region, model.wetting_fluid.color)
         Draw.line(fig, geom.meniscus, color="rgba(255,255,255,0.8)", width=1.4)
 
         alpha_r = 180 - model.theta_receding
@@ -40,6 +39,6 @@ class TrianglePlotlyRenderer:
         Draw.text(fig, 3.10, 1.81, model.wetting_fluid.name, color="white", size=16)
         Draw.text(fig, 6.65, 6.24, model.non_wetting_fluid.name, color="white", size=17)
 
-        Draw.line(fig, geom.inclined_rock_segment, width=6)
-        Draw.line(fig, geom.lower_rock_segment, width=6)
+        Draw.line(fig, geom.inclined_solid_boundary, width=6)
+        Draw.line(fig, geom.lower_solid_boundary, width=6)
         Draw.text(fig, 6.0, 0.46, model.rock.name, size=19)
