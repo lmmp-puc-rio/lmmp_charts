@@ -10,7 +10,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from lmmp_charts.geometry.triangle import TriangleGeometry
+from lmmp_charts.geometry.interfacial import InterfacialGeometry
 from lmmp_charts.models import Wettability
 from lmmp_charts.parametric.svg import ParametricSvgDocument
 from lmmp_charts.rendering.svg import InterfacialBuilder
@@ -103,7 +103,15 @@ class InterfacialSvgBuilderTests(unittest.TestCase):
                 theta_advancing=advancing,
                 theta_receding=receding,
             )[("triangle-meniscus", "d")]
-            geometry = TriangleGeometry().calculate(theta, advancing, receding)
+            config = copy.deepcopy(self.config)
+            config["angles"] = {
+                "theta": theta,
+                "theta_advancing": advancing,
+                "theta_receding": receding,
+            }
+            geometry = InterfacialGeometry().calculate(
+                Wettability.from_dict(config)
+            ).corner_interface
             if math.isclose(theta, 60, abs_tol=1e-8):
                 match = re.fullmatch(
                     r"M (-?[\d.]+) (-?[\d.]+) L (-?[\d.]+) (-?[\d.]+)", path

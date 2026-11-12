@@ -7,8 +7,7 @@ from collections.abc import Sequence
 from typing import Any
 from xml.sax.saxutils import escape, quoteattr
 
-from lmmp_charts.geometry.rectangle import RectangleGeometry
-from lmmp_charts.geometry.triangle import TriangleGeometry
+from lmmp_charts.geometry.interfacial import InterfacialGeometry
 from lmmp_charts.models.wettability import Wettability
 from lmmp_charts.parametric.expressions.evaluator import evaluate
 from lmmp_charts.parametric.svg.document import ParametricSvgDocument
@@ -76,15 +75,14 @@ def _px(value: float) -> str:
 
 
 class InterfacialBuilder:
-    """Create the v5 diagram and its versioned parameter-to-SVG bindings.
+    """Create the interfacial diagram and its parameter-to-SVG bindings.
 
     The returned document is a transport representation, not sanitized markup
     for direct insertion into a browser DOM.
     """
 
     def __init__(self) -> None:
-        self._rectangle_geometry = RectangleGeometry()
-        self._triangle_geometry = TriangleGeometry()
+        self._geometry = InterfacialGeometry()
 
     def build(self, model: Wettability) -> ParametricSvgDocument:
         """Return a validated parametric SVG document for ``model``."""
@@ -93,10 +91,9 @@ class InterfacialBuilder:
         if not (0 <= model.theta_receding < model.theta < model.theta_advancing < 90):
             raise ValueError("The approved interfacial figure requires angles < 90°")
 
-        rectangle = self._rectangle_geometry.calculate(model.theta)
-        triangle = self._triangle_geometry.calculate(
-            model.theta, model.theta_advancing, model.theta_receding,
-        )
+        geometry = self._geometry.calculate(model)
+        rectangle = geometry.flat_interface
+        triangle = geometry.corner_interface
         parameters: dict[str, dict[str, Any]] = {
             "theta": {"type": "number", "value": model.theta, "min": 0, "max": _MAX_ANGLE, "unit": "deg"},
             "theta_advancing": {
@@ -314,11 +311,11 @@ class InterfacialBuilder:
                 raise ValueError(f"SVG text binding {target} did not produce text")
             return result
 
-        nonwet_rectangle = _coordinates_path(rectangle.non_wetting_polygon)
-        nonwet_triangle = _coordinates_path(triangle.non_wetting_polygon)
-        rock_rectangle = _coordinates_path(rectangle.rock_segment, close=False)
-        rock_inclined = _coordinates_path(triangle.inclined_rock_segment, close=False)
-        rock_lower = _coordinates_path(triangle.lower_rock_segment, close=False)
+        nonwet_rectangle = _coordinates_path(rectangle.non_wetting_region)
+        nonwet_triangle = _coordinates_path(triangle.non_wetting_region)
+        rock_rectangle = _coordinates_path(rectangle.solid_boundary, close=False)
+        rock_inclined = _coordinates_path(triangle.inclined_solid_boundary, close=False)
+        rock_lower = _coordinates_path(triangle.lower_solid_boundary, close=False)
 
         drawing = [
             _element("path", {
