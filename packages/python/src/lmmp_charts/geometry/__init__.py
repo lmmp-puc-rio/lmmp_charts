@@ -1,6 +1,14 @@
 """Backend-independent geometry building blocks."""
 from .curves import CurveGeometry
-from .rectangle import RectangleCoordinates, RectangleGeometry
-from .triangle import TriangleCoordinates, TriangleGeometry
+from .rectangle import Rectangle, RectangleCoordinates, RectangleGeometry
+from .triangle import Triangle, TriangleCoordinates, TriangleGeometry
 
-__all__ = ["CurveGeometry", "RectangleCoordinates", "RectangleGeometry", "TriangleCoordinates", "TriangleGeometry"]
+__all__ = [
+    "CurveGeometry",
+    "Rectangle",
+    "RectangleCoordinates",
+    "RectangleGeometry",
+    "Triangle",
+    "TriangleCoordinates",
+    "TriangleGeometry",
+]

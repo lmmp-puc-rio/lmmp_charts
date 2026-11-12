@@ -7,8 +7,8 @@ from pathlib import Path
 import numpy as np
 
 from lmmp_charts.geometry.curves import CurveGeometry
-from lmmp_charts.geometry.rectangle import RectangleGeometry
-from lmmp_charts.geometry.triangle import TriangleGeometry
+from lmmp_charts.geometry.rectangle import Rectangle, RectangleGeometry
+from lmmp_charts.geometry.triangle import Triangle, TriangleGeometry
 
 
 class CurveTests(unittest.TestCase):
@@ -33,6 +33,74 @@ class CurveTests(unittest.TestCase):
             CurveGeometry.cubic_bezier([0,0], [1,1], [2,2], [3,3], n_points=1)
         with self.assertRaises(ValueError):
             CurveGeometry.circular_arc([0,0], -1, 0, 90)
+
+
+class RectanglePrimitiveTests(unittest.TestCase):
+    def test_from_bounds_creates_ordered_vertices_and_edges(self):
+        rectangle = Rectangle.from_bounds(1, 2, 5, 7)
+        np.testing.assert_array_equal(
+            rectangle.vertices,
+            [[1, 2], [5, 2], [5, 7], [1, 7]],
+        )
+        np.testing.assert_array_equal(
+            rectangle.edges,
+            [
+                [[1, 2], [5, 2]],
+                [[5, 2], [5, 7]],
+                [[5, 7], [1, 7]],
+                [[1, 7], [1, 2]],
+            ],
+        )
+
+    def test_accepts_rotated_rectangle(self):
+        rectangle = Rectangle(np.array([[0, 0], [1, 1], [0, 2], [-1, 1]]))
+        self.assertEqual(rectangle.vertices.shape, (4, 2))
+
+    def test_rejects_invalid_vertices(self):
+        for vertices in (
+            [[0, 0], [1, 0], [1, 1]],
+            [[0, 0], [1, 0], [2, 1], [0, 1]],
+            [[0, 0], [1, 0], [1, float("nan")], [0, 1]],
+        ):
+            with self.subTest(vertices=vertices), self.assertRaises(ValueError):
+                Rectangle(np.asarray(vertices))
+
+    def test_from_bounds_rejects_nonpositive_or_nonfinite_dimensions(self):
+        for bounds in ((1, 0, 1, 2), (0, 2, 1, 1), (0, 0, float("inf"), 1)):
+            with self.subTest(bounds=bounds), self.assertRaises(ValueError):
+                Rectangle.from_bounds(*bounds)
+
+    def test_vertices_are_read_only(self):
+        rectangle = Rectangle.from_bounds(0, 0, 1, 1)
+        with self.assertRaises(ValueError):
+            rectangle.vertices[0, 0] = 4
+
+
+class TrianglePrimitiveTests(unittest.TestCase):
+    def test_vertices_and_edges(self):
+        triangle = Triangle(np.array([[0, 0], [3, 0], [0, 4]]))
+        np.testing.assert_array_equal(
+            triangle.edges,
+            [
+                [[0, 0], [3, 0]],
+                [[3, 0], [0, 4]],
+                [[0, 4], [0, 0]],
+            ],
+        )
+
+    def test_rejects_invalid_or_degenerate_vertices(self):
+        for vertices in (
+            [[0, 0], [1, 0]],
+            [[0, 0], [1, 0], [2, 0]],
+            [[0, 0], [1, 0], [float("inf"), 1]],
+        ):
+            with self.subTest(vertices=vertices), self.assertRaises(ValueError):
+                Triangle(np.asarray(vertices))
+
+    def test_vertices_are_read_only(self):
+        triangle = Triangle(np.array([[0, 0], [1, 0], [0, 1]]))
+        with self.assertRaises(ValueError):
+            triangle.vertices[0, 0] = 4
 
 
 class RectangleTests(unittest.TestCase):
