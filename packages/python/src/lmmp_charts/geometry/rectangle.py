@@ -1,4 +1,4 @@
-"""Geometry for a flat interface between two fluids and a solid boundary."""
+"""Rectangular geometric primitive."""
 
 from __future__ import annotations
 
@@ -7,12 +7,12 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from .curves import CurveGeometry, PointArray
+from .curves import PointArray
 
 
 @dataclass(frozen=True, slots=True)
 class Rectangle:
-    """A rectangle represented by four ordered 2D vertices."""
+    """A rectangle represented by four ordered two-dimensional vertices."""
 
     vertices: PointArray
 
@@ -32,6 +32,14 @@ class Rectangle:
             raise ValueError("Adjacent rectangle edges must be perpendicular")
         vertices.setflags(write=False)
         object.__setattr__(self, "vertices", vertices)
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, Rectangle) and bool(
+            np.array_equal(self.vertices, other.vertices)
+        )
+
+    def __hash__(self) -> int:
+        return hash(tuple(tuple(point) for point in self.vertices.tolist()))
 
     @classmethod
     def from_bounds(
@@ -53,51 +61,3 @@ class Rectangle:
     def edges(self) -> PointArray:
         """Return the four edge endpoint pairs in vertex order."""
         return np.stack((self.vertices, np.roll(self.vertices, -1, axis=0)), axis=1)
-
-
-@dataclass(frozen=True, slots=True)
-class RectangleCoordinates:
-    """Calculated drawing coordinates; no Plotly or presentation attributes."""
-
-    non_wetting_polygon: PointArray
-    wetting_polygon: PointArray
-    interface_curve: PointArray
-    contact_point: PointArray
-    tangent_direction: PointArray
-    rock_segment: PointArray
-
-
-class RectangleGeometry:
-    """Compute coordinates for a flat interface in a rectangular domain.
-
-    The interface is represented by a cubic Bézier curve with 220 samples.
-    """
-
-    def calculate(self, theta: float) -> RectangleCoordinates:
-        if isinstance(theta, bool) or not isinstance(theta, (int, float)):
-            raise ValueError("theta must be a finite angle in degrees")
-        if not math.isfinite(theta) or not 0 < theta < 90:
-            raise ValueError("Flat-interface geometry requires 0 < theta < 90")
-
-        x0, x1, y0, y1 = 1.20, 10.80, 11.00, 15.30
-        contact = np.array([6.15, y0])
-        top = np.array([8.45, y1])
-        tangent = CurveGeometry.direction(theta)
-
-        curve = CurveGeometry.cubic_bezier(
-            contact,
-            contact + 2.10 * tangent,
-            [7.45, 14.45],
-            top,
-        )
-        nonwet_polygon = np.array([(x0, y0), (x1, y0), (x1, y1), (x0, y1)])
-        wet_polygon = np.vstack((curve, [x1, y1], [x1, y0]))
-        rock_segment = np.array([(x0, y0), (x1, y0)])
-        return RectangleCoordinates(
-            non_wetting_polygon=nonwet_polygon,
-            wetting_polygon=wet_polygon,
-            interface_curve=curve,
-            contact_point=contact,
-            tangent_direction=tangent,
-            rock_segment=rock_segment,
-        )

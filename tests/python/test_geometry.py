@@ -1,4 +1,4 @@
-"""Candidate regression tests for the approved v5 interface geometry."""
+"""Unit tests for reusable shape and interfacial geometry."""
 from __future__ import annotations
 
 import unittest
@@ -6,9 +6,8 @@ from pathlib import Path
 
 import numpy as np
 
-from lmmp_charts.geometry.curves import CurveGeometry
-from lmmp_charts.geometry.rectangle import Rectangle, RectangleGeometry
-from lmmp_charts.geometry.triangle import Triangle, TriangleGeometry
+from lmmp_charts.geometry import CurveGeometry, InterfacialGeometry, Rectangle, Triangle
+from lmmp_charts.models import Wettability
 
 
 class CurveTests(unittest.TestCase):
@@ -56,6 +55,12 @@ class RectanglePrimitiveTests(unittest.TestCase):
         rectangle = Rectangle(np.array([[0, 0], [1, 1], [0, 2], [-1, 1]]))
         self.assertEqual(rectangle.vertices.shape, (4, 2))
 
+    def test_equal_rectangles_compare_and_hash_by_vertices(self):
+        first = Rectangle.from_bounds(0, 0, 1, 1)
+        second = Rectangle(np.array([[0, 0], [1, 0], [1, 1], [0, 1]]))
+        self.assertEqual(first, second)
+        self.assertEqual(hash(first), hash(second))
+
     def test_rejects_invalid_vertices(self):
         for vertices in (
             [[0, 0], [1, 0], [1, 1]],
@@ -102,91 +107,105 @@ class TrianglePrimitiveTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             triangle.vertices[0, 0] = 4
 
-
-class RectangleTests(unittest.TestCase):
-    def test_v5_fixed_coordinates(self):
-        data = RectangleGeometry().calculate(45)
-        np.testing.assert_array_equal(data.contact_point, [6.15, 11.0])
-        np.testing.assert_array_equal(data.interface_curve[-1], [8.45, 15.3])
-        np.testing.assert_array_equal(data.rock_segment, [[1.2, 11], [10.8, 11]])
-
-    def test_curve_tangent(self):
-        data = RectangleGeometry().calculate(45)
-        tangent = data.interface_curve[1] - data.interface_curve[0]
-        tangent /= np.linalg.norm(tangent)
-        self.assertGreater(float(np.dot(tangent, data.tangent_direction)), .999)
-
-    def test_invalid_theta(self):
-        for theta in (-1, 0, 90, float("nan"), True):
-            with self.subTest(theta=theta), self.assertRaises(ValueError):
-                RectangleGeometry().calculate(theta)
+    def test_equal_triangles_compare_and_hash_by_vertices(self):
+        first = Triangle(np.array([[0, 0], [1, 0], [0, 1]]))
+        second = Triangle(np.array([[0, 0], [1, 0], [0, 1]]))
+        self.assertEqual(first, second)
+        self.assertEqual(hash(first), hash(second))
 
 
-class TriangleTests(unittest.TestCase):
-    def test_v5_fixed_coordinates(self):
-        data = TriangleGeometry().calculate(45, 75, 25)
-        np.testing.assert_allclose(data.corner, [1.30, 0.94])
-        np.testing.assert_allclose(data.lower_contact, [7.128, 0.94])
-        np.testing.assert_allclose(data.inclined_contact,
-                                   [1.30 + .62 * 9.4 * .5, 0.94 + .62 * 9.4 * np.sin(np.pi / 3)])
-        self.assertEqual(data.meniscus.shape, (220, 2))
-        np.testing.assert_allclose(data.meniscus[0], data.lower_contact)
-        np.testing.assert_allclose(data.meniscus[-1], data.inclined_contact)
+class InterfacialGeometryTests(unittest.TestCase):
+    """Verify interface geometry and its numerical reference coordinates."""
 
-    def test_contact_tangent_for_full_v5_domain(self):
-        for theta in (10, 25, 45, 55, 60, 70, 85):
-            with self.subTest(theta=theta):
-                data = TriangleGeometry().calculate(theta, (theta+90)/2, theta/2)
-                tangent = data.meniscus[1] - data.meniscus[0]
-                tangent /= np.linalg.norm(tangent)
-                self.assertGreater(float(np.dot(tangent, data.tangent_direction)), .999)
-
-    def test_hysteresis_rays_reference_same_lower_point(self):
-        data = TriangleGeometry().calculate(45, 75, 25)
-        np.testing.assert_allclose(data.tangent_direction, CurveGeometry.direction(135))
-        np.testing.assert_allclose(data.advancing_direction, CurveGeometry.direction(105))
-        np.testing.assert_allclose(data.receding_direction, CurveGeometry.direction(155))
-
-    def test_meniscus_does_not_depend_on_hysteresis_angles(self):
-        g = TriangleGeometry()
-        a = g.calculate(45, 75, 25)
-        b = g.calculate(45, 80, 10)
-        np.testing.assert_array_equal(a.meniscus, b.meniscus)
-
-    def test_invalid_order(self):
-        for args in [(45, 30, 25), (45, 90, 25), (45, 75, 50), (0, 75, 0)]:
-            with self.subTest(args=args), self.assertRaises(ValueError):
-                TriangleGeometry().calculate(*args)
-
-
-class V5ParityTests(unittest.TestCase):
-    """Numerically precise comparison against stored coordinates from v5.
-
-    The reference fixture is intentionally independent of the old module.
-    """
+    @staticmethod
+    def model(theta=45, theta_advancing=75, theta_receding=25):
+        return Wettability.from_dict({
+            "rock": {"name": "rock"},
+            "fluids": {
+                "wetting": {"name": "wetting", "color": "#4472C4"},
+                "non_wetting": {"name": "non-wetting", "color": "#FF0000"},
+            },
+            "angles": {
+                "theta": theta,
+                "theta_advancing": theta_advancing,
+                "theta_receding": theta_receding,
+            },
+        })
 
     @classmethod
     def setUpClass(cls):
-        cls.reference = np.load(Path(__file__).with_name('v5_geometry_reference.npz'))
+        cls.reference = np.load(Path(__file__).with_name('geometry_reference.npz'))
 
     @classmethod
     def tearDownClass(cls):
         cls.reference.close()
 
-    def test_rectangle_matches_v5_bezier(self):
-        new = RectangleGeometry().calculate(45).interface_curve
+    def test_flat_interface_coordinates_match_reference(self):
+        geometry = InterfacialGeometry().calculate(self.model())
+        flat = geometry.flat_interface
+        self.assertIsInstance(flat.domain, Rectangle)
+        np.testing.assert_array_equal(flat.contact_point, [6.15, 11.0])
+        np.testing.assert_array_equal(flat.interface_curve[-1], [8.45, 15.3])
+        np.testing.assert_array_equal(flat.solid_boundary, [[1.2, 11], [10.8, 11]])
+        new = flat.interface_curve
         np.testing.assert_allclose(new, self.reference['rectangle_45'], rtol=0, atol=2e-15)
 
-    def test_triangle_matches_v5_arc(self):
+    def test_flat_interface_tangent(self):
+        flat = InterfacialGeometry().calculate(self.model()).flat_interface
+        tangent = flat.interface_curve[1] - flat.interface_curve[0]
+        tangent /= np.linalg.norm(tangent)
+        self.assertGreater(float(np.dot(tangent, flat.tangent_direction)), .999)
+
+    def test_corner_interface_matches_reference_coordinates(self):
+        geometry = InterfacialGeometry().calculate(self.model())
+        corner = geometry.corner_interface
+        self.assertIsInstance(corner.domain, Triangle)
+        np.testing.assert_allclose(corner.corner, [1.30, 0.94])
+        np.testing.assert_allclose(corner.lower_contact, [7.128, 0.94])
+        np.testing.assert_allclose(
+            corner.inclined_contact,
+            [1.30 + .62 * 9.4 * .5, 0.94 + .62 * 9.4 * np.sin(np.pi / 3)],
+        )
+        self.assertEqual(corner.meniscus.shape, (220, 2))
+        np.testing.assert_allclose(corner.meniscus[0], corner.lower_contact)
+        np.testing.assert_allclose(corner.meniscus[-1], corner.inclined_contact)
+
+    def test_contact_tangent_and_hysteresis_directions(self):
+        corner = InterfacialGeometry().calculate(self.model()).corner_interface
+        tangent = corner.meniscus[1] - corner.meniscus[0]
+        tangent /= np.linalg.norm(tangent)
+        self.assertGreater(float(np.dot(tangent, corner.tangent_direction)), .999)
+        np.testing.assert_allclose(corner.tangent_direction, CurveGeometry.direction(135))
+        np.testing.assert_allclose(corner.advancing_direction, CurveGeometry.direction(105))
+        np.testing.assert_allclose(corner.receding_direction, CurveGeometry.direction(155))
+
+    def test_meniscus_matches_reference_across_supported_angles(self):
         for theta in (10, 25, 45, 55, 60, 70, 85):
             with self.subTest(theta=theta):
-                new = TriangleGeometry().calculate(theta, (theta + 90) / 2, theta / 2)
+                corner = InterfacialGeometry().calculate(
+                    self.model(theta, (theta + 90) / 2, theta / 2)
+                ).corner_interface
                 np.testing.assert_array_equal(
-                    new.inclined_contact, self.reference[f'triangle_{theta}_P'])
+                    corner.inclined_contact, self.reference[f'triangle_{theta}_P'])
                 np.testing.assert_array_equal(
-                    new.lower_contact, self.reference[f'triangle_{theta}_Q'])
+                    corner.lower_contact, self.reference[f'triangle_{theta}_Q'])
                 np.testing.assert_array_equal(
-                    new.meniscus, self.reference[f'triangle_{theta}_arc'])
+                    corner.meniscus, self.reference[f'triangle_{theta}_arc'])
+
+    def test_meniscus_does_not_depend_on_hysteresis_angles(self):
+        geometry = InterfacialGeometry()
+        first = geometry.calculate(self.model(45, 75, 25)).corner_interface
+        second = geometry.calculate(self.model(45, 80, 10)).corner_interface
+        np.testing.assert_array_equal(first.meniscus, second.meniscus)
+
+    def test_invalid_angle_order_rejected(self):
+        for angles in ((45, 30, 25), (45, 90, 25), (45, 75, 50), (0, 75, 0)):
+            with self.subTest(angles=angles), self.assertRaises(ValueError):
+                InterfacialGeometry().calculate(self.model(*angles))
+
+    def test_wrong_input_type_rejected(self):
+        with self.assertRaises(TypeError):
+            InterfacialGeometry().calculate({"theta": 45})
 
 
 if __name__ == '__main__':
