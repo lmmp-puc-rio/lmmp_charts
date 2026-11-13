@@ -7,12 +7,13 @@ This is a **transport contract version**, independent of the `lmmp_charts`
 
 ## Implemented scope
 
-This increment implements (a) the same JSON expression evaluator in Python
+The implementation includes (a) the same JSON expression evaluator in Python
 and TypeScript, (b) a typed/validated parametric document, (c) calculation
-of target SVG attribute patches and (d) a Python builder that generates the
-complete v5 interfacial diagram with parametric angle, color, and text
-bindings. It does **not** embed SVG in a browser or provide a React component.
-Approved geometry / Plotly output is unchanged.
+of target SVG attribute patches, (d) a Python builder that generates the
+complete interfacial diagram and (e) a TypeScript `SvgRenderer` that parses,
+sanitizes and updates the SVG in the browser. A standalone local playground
+connects the builder and renderer. There is no React component. Approved
+geometry / Plotly output is unchanged.
 
 The shared evaluator lives under `parametric/expressions/`; the SVG-specific
 document contract and bindings live under `parametric/svg/` in both language
@@ -86,25 +87,32 @@ text/path strings in the included fixtures.
 ```
 
 `constraints` allow **cross-parameter rules**, e.g. θᵣ < θ < θₐ. When any
-constraint fails, no patch list is returned. The future renderer should apply
-all patches only after successful evaluation, atomically at one frame boundary.
+constraint fails, no patch list is returned. `SvgRenderer.update()` evaluates
+and validates the complete patch list before changing any node; the DOM
+mutations run synchronously in one task before the browser paints.
 
 ## Deliberate security boundary
 
-This stage NEVER evaluates arbitrary JavaScript or Python source; it accepts
-only a fixed operation grammar and enforces complexity limits. But the
-`svg` markup is currently only checked for type/size. **Do not inject it into
-DOM via `innerHTML` yet**. The forthcoming SVG renderer MUST parse and
-sanitize SVG with a strict element/attribute allowlist, reject scripts/event
-handlers/foreign objects/external resources, and apply `textContent` as text.
-Binding string values for CSS/paths will also require attribute-specific
-validation before DOM application.
+The evaluator NEVER runs arbitrary JavaScript or Python source; it accepts
+only a fixed operation grammar and enforces complexity limits. The document
+validator checks the transport shape, not whether its markup is safe. Browser
+rendering must use `SvgRenderer`, which recreates only allowlisted SVG
+elements and attributes, rejects namespaced attributes, event handlers,
+scripts, foreign content and external-resource attributes, and applies
+`textContent` as text. Binding values are validated according to their target
+attribute before any DOM mutation. Never insert `document.svg` directly with
+`innerHTML`.
+
+The renderer currently supports `svg`, `title`, `desc`, `g`, `rect`, `path`,
+`text`, `circle`, `ellipse`, `line`, `polyline` and `polygon`, with narrowly
+allowlisted attributes and numeric/path complexity limits. This is a safe
+subset for the current builder, not a general-purpose SVG sanitizer.
 
 ## Future work
 
-1. Implement the generic SVG DOM controller with sanitization, differential
-   updates, and `requestAnimationFrame` batching; no reload or HTTP per slider.
-2. Add the React wrapper and cross-language/browser regression tests.
+1. Add broader automated browser and cross-language consistency tests for the
+   sanitizer and renderer.
+2. Add the React wrapper.
 
 ## Running tests
 

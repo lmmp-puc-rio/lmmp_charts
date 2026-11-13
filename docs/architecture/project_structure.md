@@ -40,7 +40,7 @@ lmmp_charts/
 │           │   └── plotly/      # Interpretação paramétrica PLANEJADA
 │           ├── renderers/
 │           │   ├── plotly/  # Exibição/atualização com Plotly.js
-│           │   └── svg/     # Sanitização e atualização segura PLANEJADAS
+│           │   └── svg/     # Sanitização e atualização SVG segura
 │           └── react/      # Wrappers React PLANEJADOS
 ├── tests/
 │   ├── python/              # Testes unitários da biblioteca Python
@@ -59,6 +59,7 @@ lmmp_charts/
 - `parametric/expressions/` avalia a gramática declarativa. O módulo atual também inclui construção de SVG path usada pelo contrato SVG; não há ainda consumidor paramétrico Plotly.
 - `parametric/svg/` contém o documento versionado `lmmp-parametric-svg` e calcula patches SVG; isso não sanitiza nem insere markup no DOM.
 - `parametric/plotly/` é reservado para definir como valores/bindings paramétricos se relacionarão a `data`/`layout` Plotly. Continua planejado até haver contrato aprovado e implementação.
+- `renderers/svg/SvgRenderer` recria no DOM somente elementos e atributos allowlisted, valida os patches e aplica atualizações sem duplicar fórmulas científicas específicas. Não insira diretamente o markup transportado no DOM.
 - No TypeScript, `renderers/<technology>/` exibe/atualiza no navegador; não duplica fórmulas científicas específicas.
 
 ## Design dos Builders

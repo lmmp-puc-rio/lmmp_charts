@@ -32,7 +32,7 @@
 6. Manter `types/` TypeScript como localização dos tipos de transporte. O avaliador atual inclui construção de SVG path; esse comportamento permanece parte do contrato SVG atual e não representa, por si só, suporte paramétrico Plotly.
 7. Não mudar o contrato `lmmp-parametric-svg` v1.0.0, a geometria ou a aparência aprovada do gráfico Plotly.
 
-**Status:** organização de diretórios aprovada; integração paramétrica Plotly, geração do SVG interfacial e renderizador SVG seguro permanecem planejados.
+**Status:** organização de diretórios aprovada. A geração do SVG interfacial e o renderer SVG seguro estão implementados na branch de desenvolvimento; integração paramétrica Plotly e wrappers React continuam planejados.
 
 ## 2026-11-12 — separar primitivas geométricas e geometria interfacial
 

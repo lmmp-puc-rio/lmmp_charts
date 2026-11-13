@@ -3,9 +3,9 @@
 Módulo genérico independente de React para aplicações LMMP. Inclui:
 
 1. `PlotlyRenderer`: exibe e atualiza figuras nativas Plotly.js (`data`, `layout`, `config`, `frames?`) recebidas do Python.
-2. `validateParametricDocument` e `evaluateBindings`: usam `parametric/expressions` e `parametric/svg` para validar o contrato `lmmp-parametric-svg` e calcular atualizações (`patches`) de atributos SVG a partir dos parâmetros alterados.
+2. `SvgRenderer`: valida o contrato `lmmp-parametric-svg`, constrói SVG seguro a partir de uma allowlist e aplica bindings calculados por `parametric/expressions` e `parametric/svg`.
 
-O **renderizador SVG com manipulação segura do DOM** e o componente React **ainda não estão implementados**. Nunca insira `document.svg` diretamente no DOM sem sanitização; consulte `../../docs/specifications/parametric_svg.md`.
+O SVG do contrato é texto de transporte não confiável: não o insira diretamente no DOM. `SvgRenderer.mount(container, input)` usa `DOMParser` apenas para analisar o XML, cria novos nós SVG validados e nunca usa `innerHTML`. `update(overrides)` avalia e valida todos os patches antes de atualizar o DOM; valores `textContent` são aplicados como texto. O componente React ainda não está implementado; consulte `../../docs/specifications/parametric_svg.md` para a allowlist suportada e os limites.
 
 Atualizações paramétricas de Plotly ainda não estão implementadas; `PlotlyRenderer.update` recebe uma figura completa.
 
@@ -31,12 +31,12 @@ await renderer.update("chart", figure);
 renderer.destroy("chart");
 ```
 
-## SVG paramétrico: cálculo de patches
+## SVG paramétrico
 
 ```ts
-import { validateParametricDocument, evaluateBindings } from "@lmmp/charts";
-const document = validateParametricDocument(svgContractJson);
-const patches = evaluateBindings(document, { theta: 35 });
-// patches: [{target, attribute, value}, ...]
-// O controlador de DOM seguro será implementado na próxima etapa.
+import { SvgRenderer } from "@lmmp/charts";
+const renderer = new SvgRenderer();
+renderer.mount(document.querySelector("#chart")!, svgContractJson);
+renderer.update({ theta: 35 });
+renderer.destroy();
 ```

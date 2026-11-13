@@ -64,4 +64,4 @@ Leia primeiro [`AGENTS.md`](AGENTS.md) e [`docs/development/codex_handoff.md`](d
 - [Validação da reorganização](docs/development/validation_2026-11-05.md)
 - [Relatório anterior de integração](docs/development/integration_report_previous.md)
 
-**Limites atuais:** o builder Python gera o SVG interfacial completo e seus bindings paramétricos, mas o markup não é sanitizado para inserção direta no DOM. O renderizador SVG seguro no browser e os componentes React ainda não foram implementados. Não alterar a geometria ou aparência da referência visual v5 sem aprovação explícita.
+**Limites atuais:** o builder Python gera o SVG interfacial completo e seus bindings paramétricos, mas o markup não é sanitizado para inserção direta no DOM. O renderizador SVG seguro no browser e os componentes React ainda não foram implementados.
