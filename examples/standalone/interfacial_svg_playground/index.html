@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LMMP Charts | SVG Playground</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      color: #1c293e;
+      background: #f3f6fa;
+      --line: #dce4ee;
+      --muted: #66758d;
+      --blue: #1d5fc1;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px max(22px, calc((100% - 1500px) / 2));
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 11px;
+      background: #183a74;
+      color: white;
+      font-weight: 800;
+    }
+    .brand-name { font-size: 17px; font-weight: 750; }
+    .brand-sub, .muted { color: var(--muted); font-size: 12px; }
+    .chip {
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      padding: 7px 11px;
+      color: var(--muted);
+      background: #f8fafc;
+      font-size: 12px;
+    }
+    main { max-width: 1500px; margin: auto; padding: 26px 22px 40px; }
+    .heading { margin-bottom: 20px; }
+    h1 { margin: 0; font-size: 25px; letter-spacing: -.5px; }
+    .heading p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    .flow {
+      display: inline-block;
+      margin-top: 11px;
+      border-radius: 6px;
+      padding: 6px 9px;
+      background: #e9eef5;
+      color: #53647b;
+      font: 11px ui-monospace, Consolas, monospace;
+    }
+    .grid { display: grid; grid-template-columns: minmax(330px, 430px) minmax(0, 1fr); gap: 18px; align-items: start; }
+    .panel { overflow: hidden; border: 1px solid var(--line); border-radius: 13px; background: #fff; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 17px 19px; border-bottom: 1px solid var(--line); }
+    h2 { margin: 0; font-size: 14px; }
+    .content { padding: 18px 19px; }
+    .section { margin-bottom: 20px; }
+    .section:last-child { margin-bottom: 0; }
+    .section-title { margin-bottom: 10px; color: #5b6b80; font-size: 11px; font-weight: 750; letter-spacing: .5px; text-transform: uppercase; }
+    .angles, .fluids { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+    .fluids { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+    label { color: #40526d; font-size: 11px; font-weight: 650; }
+    input, textarea {
+      width: 100%;
+      border: 1px solid #d9e2ee;
+      border-radius: 7px;
+      padding: 9px 10px;
+      background: #fff;
+      color: #1d2a40;
+      font: inherit;
+      font-size: 12px;
+    }
+    input:focus, textarea:focus { outline: 2px solid #e6f0ff; border-color: #74a3ea; }
+    input[type=color] { height: 36px; padding: 3px; cursor: pointer; }
+    .fluid-grid { display: grid; grid-template-columns: minmax(0, 1fr) 43px; gap: 7px; }
+    textarea { min-height: 270px; resize: vertical; background: #f9fbff; font: 11px/1.5 ui-monospace, Consolas, monospace; }
+    .buttons { display: flex; gap: 8px; margin-top: 10px; }
+    button { cursor: pointer; border: 1px solid #d2ddec; border-radius: 7px; padding: 9px 11px; background: white; color: #344760; font: inherit; font-size: 12px; font-weight: 650; }
+    button:hover:not(:disabled) { background: #f1f5fa; }
+    button.primary { flex: 1; border-color: var(--blue); background: var(--blue); color: white; }
+    button.primary:hover:not(:disabled) { background: #184f9d; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+    .preview { min-height: 670px; padding: 14px; }
+    #svg-output { display: grid; min-height: 640px; place-items: center; }
+    #svg-output svg { display: block; width: min(100%, 650px); height: auto; }
+    .status { min-height: 46px; border-top: 1px solid var(--line); padding: 13px 18px; color: #08775b; font-size: 12px; }
+    .status[data-state=error] { color: #b52d38; }
+    .status[data-state=loading] { color: var(--muted); }
+    .footnote { margin-top: 14px; color: #8390a3; font-size: 11px; text-align: right; }
+    @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+    @media (max-width: 540px) {
+      header { padding: 14px; }
+      .chip { display: none; }
+      main { padding: 20px 12px; }
+      .angles { gap: 6px; }
+      .content { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-mark">LM</div>
+      <div>
+        <div class="brand-name">LMMP Charts</div>
+        <div class="brand-sub">Playground standalone · SVG paramétrico</div>
+      </div>
+    </div>
+    <span class="chip">Builder Python → Renderer TypeScript</span>
+  </header>
+  <main>
+    <div class="heading">
+      <h1>Interfacial SVG Playground</h1>
+      <p>O Python gera o documento; o TypeScript sanitiza o SVG e atualiza os bindings no navegador.</p>
+      <span class="flow">Wettability → InterfacialBuilder → contrato JSON → SvgRenderer</span>
+    </div>
+    <div class="grid">
+      <section class="panel" aria-label="Parâmetros do gráfico">
+        <div class="panel-head"><h2>Parâmetros interfaciais</h2><span class="muted">Atualização local</span></div>
+        <div class="content">
+          <div class="section">
+            <div class="section-title">Ângulos (graus)</div>
+            <div class="angles">
+              <div class="field"><label for="theta">θ estático</label><input id="theta" type="number" step="1" value="45"></div>
+              <div class="field"><label for="theta_advancing">θ avanço</label><input id="theta_advancing" type="number" step="1" value="75"></div>
+              <div class="field"><label for="theta_receding">θ recuo</label><input id="theta_receding" type="number" step="1" value="25"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Fase molhante</div>
+            <div class="fluid-grid">
+              <div class="field"><label for="wetting_name">Nome</label><input id="wetting_name" type="text" value="Salmoura"></div>
+              <div class="field"><label for="wetting_color">Cor</label><input id="wetting_color" type="color" value="#4472c4"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Fase não molhante</div>
+            <div class="fluid-grid">
+              <div class="field"><label for="non_wetting_name">Nome</label><input id="non_wetting_name" type="text" value="CO2"></div>
+              <div class="field"><label for="non_wetting_color">Cor</label><input id="non_wetting_color" type="color" value="#ff0000"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section-title">Configuração enviada ao Python</div>
+            <textarea id="config" spellcheck="false" aria-label="Configuração JSON"></textarea>
+            <div class="buttons">
+              <button id="apply-json" class="primary" type="button">Gerar documento SVG</button>
+              <button id="reset" type="button">Restaurar exemplo</button>
+            </div>
+          </div>
+        </div>
+        <div id="status" class="status" role="status" aria-live="polite" data-state="loading">Carregando documento...</div>
+      </section>
+      <section class="panel" aria-label="Visualização SVG">
+        <div class="panel-head"><h2>Visualização</h2><span class="muted">Sem Plotly ou CDN</span></div>
+        <div id="svg-output" class="preview"></div>
+      </section>
+    </div>
+    <div class="footnote">Expressões e geometria permanecem no contrato e no builder Python; o renderer não recalcula fórmulas científicas.</div>
+  </main>
+  <script type="module">
+    import { SvgRenderer } from "/typescript/renderers/svg/SvgRenderer.js";
+
+    const renderer = new SvgRenderer();
+    const container = document.querySelector("#svg-output");
+    const status = document.querySelector("#status");
+    const configField = document.querySelector("#config");
+    const applyButton = document.querySelector("#apply-json");
+    const resetButton = document.querySelector("#reset");
+    let exampleConfig;
+
+    function setStatus(message, state = "ready") {
+      status.textContent = message;
+      status.dataset.state = state;
+    }
+
+    function writeControls(config) {
+      document.querySelector("#theta").value = config.angles.theta;
+      document.querySelector("#theta_advancing").value = config.angles.theta_advancing;
+      document.querySelector("#theta_receding").value = config.angles.theta_receding;
+      document.querySelector("#wetting_name").value = config.fluids.wetting.name;
+      document.querySelector("#wetting_color").value = config.fluids.wetting.color;
+      document.querySelector("#non_wetting_name").value = config.fluids.non_wetting.name;
+      document.querySelector("#non_wetting_color").value = config.fluids.non_wetting.color;
+    }
+
+    function parameterValues() {
+      const readNumber = id => {
+        const value = document.querySelector(`#${id}`).valueAsNumber;
+        if (!Number.isFinite(value)) throw new TypeError(`Informe um valor numérico válido para ${id}.`);
+        return value;
+      };
+      return {
+        theta: readNumber("theta"),
+        theta_advancing: readNumber("theta_advancing"),
+        theta_receding: readNumber("theta_receding"),
+        "wetting.name": document.querySelector("#wetting_name").value,
+        "wetting.color": document.querySelector("#wetting_color").value,
+        "non_wetting.name": document.querySelector("#non_wetting_name").value,
+        "non_wetting.color": document.querySelector("#non_wetting_color").value,
+      };
+    }
+
+    async function requestDocument(config) {
+      const response = await fetch("/api/svg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(config),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error || `Falha HTTP ${response.status}`);
+      return payload;
+    }
+
+    async function applyConfig(config) {
+      applyButton.disabled = true;
+      setStatus("Gerando documento com o builder Python...", "loading");
+      try {
+        const document = await requestDocument(config);
+        renderer.mount(container, document);
+        configField.value = JSON.stringify(config, null, 2);
+        writeControls(config);
+        setStatus("Documento SVG gerado e sanitizado.");
+      } catch (error) {
+        setStatus(error instanceof Error ? error.message : String(error), "error");
+      } finally {
+        applyButton.disabled = false;
+      }
+    }
+
+    function updateBindings() {
+      try {
+        renderer.update(parameterValues());
+        setStatus("Bindings atualizados no navegador.");
+      } catch (error) {
+        setStatus(error instanceof Error ? error.message : String(error), "error");
+      }
+    }
+
+    applyButton.addEventListener("click", () => {
+      try {
+        const config = JSON.parse(configField.value);
+        void applyConfig(config);
+      } catch (error) {
+        setStatus(error instanceof Error ? error.message : String(error), "error");
+      }
+    });
+    resetButton.addEventListener("click", () => void applyConfig(exampleConfig));
+    for (const id of [
+      "theta", "theta_advancing", "theta_receding", "wetting_name",
+      "wetting_color", "non_wetting_name", "non_wetting_color",
+    ]) {
+      document.querySelector(`#${id}`).addEventListener("input", updateBindings);
+    }
+
+    try {
+      const response = await fetch("/api/example");
+      if (!response.ok) throw new Error(`Falha HTTP ${response.status} ao carregar o exemplo.`);
+      exampleConfig = await response.json();
+      await applyConfig(exampleConfig);
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : String(error), "error");
+    }
+  </script>
+</body>
+</html>

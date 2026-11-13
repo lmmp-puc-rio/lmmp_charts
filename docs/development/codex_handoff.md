@@ -19,9 +19,9 @@ Desenvolver a biblioteca reutilizável `lmmp_charts` (Python e TypeScript), adot
 
 ## Estado exato na entrega
 
-Implementado: modelos, geometria, gráfico Plotly de referência, façade `InterfacialChart`, avaliadores em `parametric/expressions`, documento SVG paramétrico em `parametric/svg` e cálculo de patches, builder Python do diagrama interfacial SVG com bindings paramétricos e `uv`/`pyproject.toml`.
+Implementado: modelos, geometria, gráfico Plotly de referência, façade `InterfacialChart`, avaliadores em `parametric/expressions`, documento SVG paramétrico em `parametric/svg` e cálculo de patches, builder Python do diagrama interfacial SVG com bindings paramétricos, `SvgRenderer` genérico TypeScript, playground SVG local e `uv`/`pyproject.toml`.
 
-Não implementado: bindings/atualizações paramétricas Plotly, sanitização/atualização do DOM SVG no TypeScript e wrappers React definitivos. O markup SVG gerado ainda não é seguro para inserção direta no DOM. Não afirmar que esses componentes estão concluídos.
+Não implementado: renderer ou bindings/atualizações paramétricas Plotly e wrappers React definitivos. O markup SVG gerado continua sendo transporte não confiável e não deve ser inserido diretamente no DOM; usar `SvgRenderer`.
 
 Versões: pacote Python e npm `0.4.0` (desenvolvimento, sem release); contrato SVG `1.0.0`.
 
@@ -31,7 +31,7 @@ Versões: pacote Python e npm `0.4.0` (desenvolvimento, sem release); contrato S
 2. Leia `AGENTS.md`, `README.md`, `docs/architecture/decisions.md` e `docs/architecture/project_structure.md`.
 3. Para publicar a base, siga `docs/development/github_setup.md`.
 4. Execute os testes descritos em `docs/development/testing.md` antes de propor alterações.
-5. Trabalhe no renderizador TypeScript SVG seguro, de forma incremental e sem modificar o gráfico Plotly v5 aprovado.
+5. Amplie os testes automatizados de browser e a verificação de paridade do renderizador SVG sem modificar a saída Plotly aprovada.
 6. Solicite aprovação antes de grandes refatorações ou mudanças no contrato.
 
 ## Uso do histórico deste chat

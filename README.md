@@ -7,7 +7,7 @@ Biblioteca de gráficos científicos LMMP, com API de geração em Python e inte
 ## Pacotes
 
 - [`packages/python`](packages/python): `models`, `geometry`, `charts`, `parametric/expressions`, `parametric/svg`, `rendering/plotly` e o builder SVG paramétrico em `rendering/svg`. A classe pública é `InterfacialChart`.
-- [`packages/typescript`](packages/typescript): `PlotlyRenderer` sem dependência de React e avaliação do contrato SVG paramétrico (`parametric/expressions` + `parametric/svg`). Bindings paramétricos Plotly, controlador DOM SVG e wrapper React ainda estão pendentes. Nome npm: `@lmmp/charts`.
+- [`packages/typescript`](packages/typescript): avaliação do contrato SVG paramétrico (`parametric/expressions` + `parametric/svg`) e `SvgRenderer` seguro, sem dependência de React. O renderer e os bindings paramétricos Plotly, além do wrapper React, continuam pendentes. Nome npm: `@lmmp/charts`.
 - [`docs`](docs): arquitetura, decisões, contrato SVG, relatório e instruções de continuidade para Codex/VS Code.
 
 ## Python — desenvolvimento
@@ -39,17 +39,16 @@ npm test
 ```
 
 ```typescript
-import { PlotlyRenderer, validateParametricDocument, evaluateBindings } from '@lmmp/charts';
-// Injete a instância Plotly.js no construtor; sem CDN obrigatória.
+import { SvgRenderer, validateParametricDocument, evaluateBindings } from '@lmmp/charts';
 ```
 
 ## Playground local
 
 ```bash
-PYTHONPATH=packages/python/src python examples/standalone/interfacial_playground/server.py
+PYTHONPATH=packages/python/src python examples/standalone/interfacial_svg_playground/server.py
 ```
 
-Acesse `http://127.0.0.1:8765`. O JavaScript Plotly usado no exemplo é fornecido localmente.
+Acesse `http://127.0.0.1:8766`. O playground conecta o builder SVG Python ao `SvgRenderer` compilado localmente.
 
 ## Documentação e continuidade no Codex
 
@@ -64,4 +63,4 @@ Leia primeiro [`AGENTS.md`](AGENTS.md) e [`docs/development/codex_handoff.md`](d
 - [Validação da reorganização](docs/development/validation_2026-11-05.md)
 - [Relatório anterior de integração](docs/development/integration_report_previous.md)
 
-**Limites atuais:** o builder Python gera o SVG interfacial completo e seus bindings paramétricos, mas o markup não é sanitizado para inserção direta no DOM. O renderizador SVG seguro no browser e os componentes React ainda não foram implementados. Não alterar a geometria ou aparência da referência visual v5 sem aprovação explícita.
+**Limites atuais:** o builder Python gera o SVG interfacial completo e seus bindings paramétricos. O markup transportado só deve ser inserido no DOM por meio do `SvgRenderer`. O renderer Plotly TypeScript, os testes automatizados em navegador e os componentes React ainda não foram implementados.
