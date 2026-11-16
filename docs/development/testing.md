@@ -9,6 +9,6 @@ PYTHONPATH=packages/python/src python -m unittest discover -s examples/standalon
 (cd packages/python && uv build)
 ```
 
-Também é importante comparar `tests/python/fixtures/v5_plotly_reference.json` e a referência geométrica `tests/python/v5_geometry_reference.npz`; nenhuma modificação visual foi autorizada.
+Também é importante executar os testes que comparam os resultados Plotly e geométricos com as fixtures de referência armazenadas; alterações visuais exigem aprovação.
 
 O TypeScript requer Node.js e o compilador TypeScript; `npm install` instala as dependências de desenvolvimento. Os resultados registrados em `integration_report_previous.md` correspondem à estrutura **anterior**; a validação desta reorganização deve ser registrada separadamente.

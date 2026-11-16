@@ -8,10 +8,11 @@ Desenvolver a biblioteca reutilizável `lmmp_charts` (Python e TypeScript), adot
 
 - `docs/`, `packages/python/`, `packages/typescript/`.
 - Python `charts/` para a classe pública `InterfacialChart`; `rendering/plotly/interfacial_builder.py` para `InterfacialBuilder`, e futuramente `rendering/svg/interfacial_builder.py`.
+- `geometry/Rectangle`, `geometry/Triangle` e `geometry/CurveGeometry` são genéricos; `geometry/InterfacialGeometry` compõe essas primitivas para calcular coordenadas sem depender de um formato de renderização.
 - **Não utilizar `scene/`.** Abstrações comuns podem ser adicionadas mais tarde mediante necessidade comprovada e aprovação.
 - Python `expressions/` e TypeScript `expressions/` avaliam a mesma gramática matemática declarativa, sem executar código recebido no JSON.
-- Python `InterfacialChart.generate()` por padrão retorna figura Plotly.js `dict` (data, layout, config). O backend SVG ainda não foi implementado.
-- Referência visual interfacial **v5** congelada; preservar geometria, estilos, traços, anotações e posição das fases.
+- Python `InterfacialChart.generate()` por padrão retorna figura Plotly.js `dict` (data, layout, config). Builders recebem resultados da geometria e geram a representação do formato escolhido.
+- Preservar a geometria, os estilos, os traços, as anotações e a posição das fases aprovados.
 - O diagrama usa molhabilidade medida **do lado do fluido molhante**, ângulos absolutos com a relação `0 <= theta_receding < theta < theta_advancing < 90` para renderização.
 - SVG paramétrico: documento versionado `lmmp-parametric-svg/1.0.0`, atualizador genérico TypeScript sem fórmulas de menisco específicas.
 
@@ -29,7 +30,7 @@ Versões: pacote Python e npm `0.4.0` (desenvolvimento, sem release); contrato S
 2. Leia `AGENTS.md`, `README.md`, `docs/architecture/decisions.md` e `docs/architecture/project_structure.md`.
 3. Para publicar a base, siga `docs/development/github_setup.md`.
 4. Execute os testes descritos em `docs/development/testing.md` antes de propor alterações.
-5. Trabalhe primeiro no `SvgInterfacialBuilder` Python, de forma incremental e sem modificar o gráfico Plotly v5 aprovado.
+5. Trabalhe nos builders por formato sem alterar a saída Plotly aprovada.
 6. Solicite aprovação antes de grandes refatorações ou mudanças no contrato.
 
 ## Uso do histórico deste chat
