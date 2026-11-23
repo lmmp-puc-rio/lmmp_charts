@@ -1,6 +1,20 @@
 """Backend-independent geometry building blocks."""
 from .curves import CurveGeometry
-from .rectangle import RectangleCoordinates, RectangleGeometry
-from .triangle import TriangleCoordinates, TriangleGeometry
+from .interfacial import (
+    CornerInterfaceCoordinates,
+    FlatInterfaceCoordinates,
+    InterfacialCoordinates,
+    InterfacialGeometry,
+)
+from .rectangle import Rectangle
+from .triangle import Triangle
 
-__all__ = ["CurveGeometry", "RectangleCoordinates", "RectangleGeometry", "TriangleCoordinates", "TriangleGeometry"]
+__all__ = [
+    "CurveGeometry",
+    "CornerInterfaceCoordinates",
+    "FlatInterfaceCoordinates",
+    "InterfacialCoordinates",
+    "InterfacialGeometry",
+    "Rectangle",
+    "Triangle",
+]

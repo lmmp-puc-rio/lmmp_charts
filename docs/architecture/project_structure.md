@@ -16,7 +16,11 @@ lmmp_charts/
 │   │   ├── pyproject.toml   # Build do pacote lmmp-charts com uv
 │   │   └── src/lmmp_charts/
 │   │       ├── models/      # Modelos e validações de entrada
-│   │       ├── geometry/    # Geometria pura e curvas
+│   │       ├── geometry/    # Formas genéricas e geometria de domínio
+│   │       │   ├── curves.py      # Operações matemáticas para curvas
+│   │       │   ├── rectangle.py   # Primitiva Rectangle
+│   │       │   ├── triangle.py    # Primitiva Triangle
+│   │       │   └── interfacial.py # Cálculo de regiões e meniscos
 │   │       ├── charts/      # Facades públicas: interfacial_chart.py
 │   │       ├── expressions/ # Avaliador e contrato matemático declarativo
 │   │       └── rendering/  # Geração de representações gráficas Python
@@ -32,13 +36,15 @@ lmmp_charts/
 │           │   ├── plotly/  # Implementado
 │           │   └── svg/     # Controle do DOM seguro PLANEJADO
 │           └── react/      # Componentes wrappers PLANEJADOS
-├── tests/                  # Python, integração cruzada, referências v5
+├── tests/                  # Testes Python e de integração, com fixtures de referência
 └── examples/               # Playground, Django/React previstos, fixtures
 ```
 
 ## Fluxos
 
-Python: `models` -> `charts` + `geometry` -> `rendering/plotly` -> JSON Plotly -> TypeScript `renderers/plotly`.
+Python: `models` -> `geometry/InterfacialGeometry` -> `charts` / `rendering/<technology>/InterfacialBuilder` -> representação gráfica.
+
+`geometry/Rectangle`, `geometry/Triangle` e `geometry/CurveGeometry` são componentes geométricos sem conhecimento de gráficos específicos. `geometry/InterfacialGeometry` compõe essas primitivas para calcular as regiões e curvas do domínio interfacial. Os builders convertem as coordenadas resultantes para Plotly, SVG ou outros formatos.
 
 SVG (planejado): `models` -> `charts` + `geometry` + `expressions` -> `rendering/svg` -> `ParametricSvgDocument` -> TypeScript `expressions` + `parametric` + `renderers/svg` -> React.
 
