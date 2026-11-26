@@ -48,6 +48,15 @@ Python: `models` -> `geometry/InterfacialGeometry` -> `charts` / `rendering/<tec
 
 SVG (planejado): `models` -> `charts` + `geometry` + `expressions` -> `rendering/svg` -> `ParametricSvgDocument` -> TypeScript `expressions` + `parametric` + `renderers/svg` -> React.
 
+## Dependências entre classes Python
+
+O diagrama abaixo representa as relações entre os modelos, a geometria
+interfacial, o rendering Plotly e a façade pública. A legenda está incorporada
+ao próprio diagrama. O arquivo-fonte editável está em
+[`diagrams/python_class_dependencies.mmd`](diagrams/python_class_dependencies.mmd).
+
+![Dependências entre as classes Python](diagrams/python_class_dependencies.svg)
+
 ## Design dos Builders
 
 - `charts/interfacial_chart.py` define `InterfacialChart`, interface pública e coordenação.

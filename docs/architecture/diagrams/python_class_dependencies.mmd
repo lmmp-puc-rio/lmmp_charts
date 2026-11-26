@@ -1,0 +1,163 @@
+---
+config:
+  theme: neutral
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+    class ConfigModel {
+        +from_dict()
+        +from_json_file()
+        +to_dict()
+        +validate()
+    }
+    class Fluid {
+        +name: str
+        +color: str
+        +validate()
+    }
+    class Rock {
+        +name: str
+        +validate()
+    }
+    class Wettability {
+        +rock: Rock
+        +wetting_fluid: Fluid
+        +non_wetting_fluid: Fluid
+        +theta: float
+        +theta_advancing: float
+        +theta_receding: float
+        +validate()
+        +to_dict()
+    }
+
+    ConfigModel ..> Fluid : heranca
+    ConfigModel ..> Rock : heranca
+    ConfigModel ..> Wettability : heranca
+    Wettability "1" o-- "1" Rock : rock
+    Wettability "1" o-- "2" Fluid : wetting / non_wetting
+
+    class CurveGeometry {
+        +direction()
+        +cubic_bezier()
+        +circular_arc()
+    }
+    class Rectangle {
+        +vertices
+        +from_bounds()
+        +edges
+    }
+    class Triangle {
+        +vertices
+        +edges
+    }
+
+    CurveGeometry --> Rectangle : PointArray importado por
+    CurveGeometry --> Triangle : PointArray importado por
+
+    class FlatInterfaceCoordinates {
+        +domain: Rectangle
+        +non_wetting_region
+        +wetting_region
+        +interface_curve
+        +contact_point
+        +tangent_direction
+        +solid_boundary
+    }
+    class CornerInterfaceCoordinates {
+        +domain: Triangle
+        +corner
+        +inclined_contact
+        +lower_contact
+        +meniscus
+        +wetting_region
+        +non_wetting_region
+        +tangent_direction
+        +advancing_direction
+        +receding_direction
+    }
+    class InterfacialCoordinates {
+        +flat_interface: FlatInterfaceCoordinates
+        +corner_interface: CornerInterfaceCoordinates
+    }
+
+    FlatInterfaceCoordinates "1" o-- "1" Rectangle : domain
+    CornerInterfaceCoordinates "1" o-- "1" Triangle : domain
+    InterfacialCoordinates "1" o-- "1" FlatInterfaceCoordinates : flat_interface
+    InterfacialCoordinates "1" o-- "1" CornerInterfaceCoordinates : corner_interface
+
+    class InterfacialGeometry {
+        +calculate(model) InterfacialCoordinates
+        -_flat_interface(theta) FlatInterfaceCoordinates
+        -_corner_interface(theta, advancing, receding) CornerInterfaceCoordinates
+    }
+
+    Wettability --> InterfacialGeometry : importada por
+    CurveGeometry --> InterfacialGeometry : importada por
+    Rectangle --> InterfacialGeometry : importada por
+    Triangle --> InterfacialGeometry : importada por
+
+    class PlotlyPrimitives {
+        +polygon()
+        +line()
+        +text()
+        +sector()
+    }
+    CurveGeometry --> PlotlyPrimitives : importada por
+
+    class FlatInterfacePlotlyRenderer {
+        +draw(fig, geom, model)
+    }
+    FlatInterfaceCoordinates --> FlatInterfacePlotlyRenderer : importada por
+    Wettability --> FlatInterfacePlotlyRenderer : importada por
+    PlotlyPrimitives --> FlatInterfacePlotlyRenderer : importada por
+
+    class CornerInterfacePlotlyRenderer {
+        +draw(fig, geom, model)
+    }
+    CornerInterfaceCoordinates --> CornerInterfacePlotlyRenderer : importada por
+    Wettability --> CornerInterfacePlotlyRenderer : importada por
+    CurveGeometry --> CornerInterfacePlotlyRenderer : importada por
+    PlotlyPrimitives --> CornerInterfacePlotlyRenderer : importada por
+
+    class PlotlyStyles {
+        +FIGURE_LAYOUT
+        +RENDER_CONFIG
+    }
+    class InterfacialBuilder {
+        -_geometry: InterfacialGeometry
+        -_flat_renderer: FlatInterfacePlotlyRenderer
+        -_corner_renderer: CornerInterfacePlotlyRenderer
+        +build(model)
+        +to_payload(model)
+    }
+
+    InterfacialBuilder "1" *-- "1" InterfacialGeometry : _geometry
+    InterfacialBuilder "1" *-- "1" FlatInterfacePlotlyRenderer : _flat_renderer
+    InterfacialBuilder "1" *-- "1" CornerInterfacePlotlyRenderer : _corner_renderer
+    Wettability --> InterfacialBuilder : importada por
+    PlotlyPrimitives --> InterfacialBuilder : importada por
+    PlotlyStyles --> InterfacialBuilder : importada por
+
+    class InterfacialChart {
+        -_model: Wettability
+        -_builder: InterfacialBuilder
+        +generate()
+        +to_json()
+        +to_figure()
+        +show()
+        +save_image()
+    }
+    InterfacialChart "1" o-- "1" Wettability : _model
+    InterfacialChart "1" *-- "1" InterfacialBuilder : _builder
+
+    class Legenda {
+        <<legenda>>
+        linha pontilhada: heranca
+        linha solida: importacao
+        losango vazio: agregacao
+        losango cheio: composicao
+        seta entra na classe dependente
+    }
