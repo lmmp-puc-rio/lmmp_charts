@@ -1,0 +1,17 @@
+[project]
+name = "lmmp-charts"
+version = "0.4.0"
+description = "Reusable chart models, geometry, and Plotly backend for LMMP applications"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.26,<3",
+    "plotly>=6.0,<7",
+]
+
+[project.optional-dependencies]
+image = ["kaleido>=1.0,<2"]
+
+[build-system]
+requires = ["uv_build>=0.10.0,<0.14"]
+build-backend = "uv_build"
