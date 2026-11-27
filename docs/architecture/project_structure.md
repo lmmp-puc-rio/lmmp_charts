@@ -62,14 +62,24 @@ lmmp_charts/
 - `renderers/svg/SvgRenderer` recria no DOM somente elementos e atributos allowlisted, valida os patches e aplica atualizações sem duplicar fórmulas científicas específicas. Não insira diretamente o markup transportado no DOM.
 - No TypeScript, `renderers/<technology>/` exibe/atualiza no navegador; não duplica fórmulas científicas específicas.
 
-## Dependências entre classes Python
+## Backend Python Plotly
 
 O diagrama abaixo representa as relações entre os modelos, a geometria
 interfacial, o rendering Plotly e a façade pública. A legenda está incorporada
 ao próprio diagrama. O arquivo-fonte editável está em
-[`diagrams/python_class_dependencies.mmd`](diagrams/python_class_dependencies.mmd).
+[`diagrams/python_plotly_dependencies.mmd`](diagrams/python_plotly_dependencies.mmd).
 
-![Dependências entre as classes Python](diagrams/python_class_dependencies.svg)
+![Dependências do backend Python Plotly](diagrams/python_plotly_dependencies.svg)
+
+### Backend Python SVG
+
+O diagrama SVG detalha como o `rendering/svg/InterfacialBuilder` consome o
+modelo de molhabilidade e a geometria compartilhada, cria expressões
+declarativas e entrega um `ParametricSvgDocument`. O arquivo-fonte editável
+está em
+[`diagrams/python_svg_dependencies.mmd`](diagrams/python_svg_dependencies.mmd).
+
+![Dependências do backend Python SVG](diagrams/python_svg_dependencies.svg)
 
 ## Design dos Builders
 

@@ -1,0 +1,154 @@
+---
+title: Dependencias do backend Python SVG
+config:
+  theme: neutral
+  class:
+    hideEmptyMembersBox: true
+---
+classDiagram
+    direction TB
+
+    class ConfigModel {
+        <<abstract>>
+        +from_dict(data)
+        +from_json_file(path)
+        +to_dict()
+        +validate()
+    }
+    class Fluid {
+        +name: str
+        +color: str
+        +validate()
+    }
+    class Rock {
+        +name: str
+        +validate()
+    }
+    class Wettability {
+        +rock: Rock
+        +wetting_fluid: Fluid
+        +non_wetting_fluid: Fluid
+        +theta: float
+        +theta_advancing: float
+        +theta_receding: float
+        +validate()
+    }
+
+    ConfigModel ..> Fluid : heranca
+    ConfigModel ..> Rock : heranca
+    ConfigModel ..> Wettability : heranca
+    Wettability "1" o-- "1" Rock : rock
+    Wettability "1" o-- "2" Fluid : wetting / non_wetting
+
+    class Rectangle {
+        +vertices: PointArray
+        +edges
+    }
+    class Triangle {
+        +vertices: PointArray
+        +edges
+    }
+    class FlatInterfaceCoordinates {
+        +domain: Rectangle
+        +interface_curve: PointArray
+        +contact_point: PointArray
+        +tangent_direction: PointArray
+        +wetting_region: PointArray
+        +non_wetting_region: PointArray
+    }
+    class CornerInterfaceCoordinates {
+        +domain: Triangle
+        +corner: PointArray
+        +meniscus: PointArray
+        +tangent_direction: PointArray
+        +advancing_direction: PointArray
+        +receding_direction: PointArray
+        +wetting_region: PointArray
+        +non_wetting_region: PointArray
+    }
+    class InterfacialCoordinates {
+        +flat_interface: FlatInterfaceCoordinates
+        +corner_interface: CornerInterfaceCoordinates
+    }
+    class InterfacialGeometry {
+        +calculate(model) InterfacialCoordinates
+        -_flat_interface(theta) FlatInterfaceCoordinates
+        -_corner_interface(theta, advancing, receding) CornerInterfaceCoordinates
+    }
+
+    FlatInterfaceCoordinates "1" o-- "1" Rectangle : domain
+    CornerInterfaceCoordinates "1" o-- "1" Triangle : domain
+    InterfacialCoordinates "1" o-- "1" FlatInterfaceCoordinates : flat_interface
+    InterfacialCoordinates "1" o-- "1" CornerInterfaceCoordinates : corner_interface
+    Wettability --> InterfacialGeometry : importada por
+    FlatInterfaceCoordinates --> InterfacialGeometry : produzida por
+    CornerInterfaceCoordinates --> InterfacialGeometry : produzida por
+    InterfacialCoordinates --> InterfacialGeometry : produzida por
+
+    class ExpressionEvaluator {
+        <<module>>
+        +references(expression) set~str~
+        +evaluate(expression, variables) Scalar
+        -_valid_name(name) bool
+        -_finite(value) float
+    }
+    class ExpressionError {
+        +message: str
+    }
+    ExpressionError --> ExpressionEvaluator : usada por
+
+    class ParametricSvgDocument {
+        <<frozen dataclass>>
+        +svg: str
+        +parameters: dict
+        +bindings: tuple
+        +constraints: tuple
+        +from_dict(data) ParametricSvgDocument
+        +to_dict() dict
+        +evaluate_bindings(overrides) list
+    }
+
+    ExpressionEvaluator --> ParametricSvgDocument : importado por
+
+    class InterfacialBuilder {
+        <<rendering.svg>>
+        -_geometry: InterfacialGeometry
+        +build(model) ParametricSvgDocument
+    }
+    class SvgBuilderHelpers {
+        <<module functions>>
+        -_const(value) Expression
+        -_var(name) Expression
+        -_op(name, args) Expression
+        -_path(commands) Expression
+        -_coordinates_path(points) str
+        -_element(tag, attributes, content) str
+    }
+
+    InterfacialBuilder "1" *-- "1" InterfacialGeometry : _geometry
+    Wettability --> InterfacialBuilder : importada por
+    FlatInterfaceCoordinates --> InterfacialBuilder : consumida por
+    CornerInterfaceCoordinates --> InterfacialBuilder : consumida por
+    ExpressionEvaluator --> InterfacialBuilder : importado por
+    ParametricSvgDocument --> InterfacialBuilder : construida por
+    SvgBuilderHelpers --> InterfacialBuilder : chamada por
+
+    class SvgContractPayload {
+        <<JSON lmmp-parametric-svg 1.0.0>>
+        +format: str
+        +version: str
+        +svg: str
+        +parameters: object
+        +bindings: array
+        +constraints: array
+    }
+    ParametricSvgDocument --> SvgContractPayload : to_dict produz
+
+    class Legenda {
+        <<legenda>>
+        linha pontilhada: heranca
+        linha solida: importacao ou chamada
+        losango vazio: agregacao
+        losango cheio: composicao
+        seta entra na classe dependente
+    }

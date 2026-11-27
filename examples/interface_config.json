@@ -1,0 +1,20 @@
+{
+  "rock": {
+    "name": "Bentheimer"
+  },
+  "fluids": {
+    "wetting": {
+      "name": "Salmoura",
+      "color": "#4472C4"
+    },
+    "non_wetting": {
+      "name": "CO2",
+      "color": "#FF0000"
+    }
+  },
+  "angles": {
+    "theta": 45,
+    "theta_advancing": 75,
+    "theta_receding": 25
+  }
+}

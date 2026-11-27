@@ -4,7 +4,7 @@ Execute a partir da raiz, salvo indicação contrária:
 
 ```bash
 PYTHONPATH=packages/python/src python -m unittest discover -s tests/python -p 'test_*.py' -v
-PYTHONPATH=packages/python/src python -m unittest discover -s examples/standalone/interfacial_playground -p 'test_*.py' -v
+PYTHONPATH=packages/python/src python -m unittest discover -s examples/standalone/interfacial_svg_playground -p 'test_*.py' -v
 (cd packages/typescript && npm test)
 (cd packages/python && uv build)
 ```

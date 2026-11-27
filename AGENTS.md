@@ -14,7 +14,7 @@ Leia `docs/development/codex_handoff.md`, `docs/architecture/decisions.md` e `do
 ## Qualidade e escopo
 - Preserve a geometria e a aparência da referência interfacial v5. O modelo `Wettability` usa os três ângulos absolutos medidos do lado molhante; o gráfico requer 0 <= theta_receding < theta < theta_advancing < 90 graus.
 - Python é responsável por modelos, validação, geometria e geração de saída; o TypeScript é responsável por interpretar/atualizar o gráfico no frontend sem duplicar fórmulas científicas específicas.
-- O contrato SVG paramétrico é implementado em `parametric/svg/` e usa os avaliadores de Python/TS em `parametric/expressions/`; **o SVG interfacial completo, a sanitização/atualização DOM e o wrapper React continuam pendentes**. Não afirmar que existem nem executar strings SVG não sanitizadas.
+- O contrato SVG paramétrico é implementado em `parametric/svg/` e usa os avaliadores de Python/TS em `parametric/expressions/`; o builder SVG interfacial e a sanitização/atualização DOM por `SvgRenderer` estão implementados. O wrapper React continua pendente. Não inserir strings SVG diretamente no DOM.
 - O avaliador atual inclui geração de comandos SVG path para o contrato SVG; isso não significa que fórmulas ou bindings paramétricos Plotly estejam implementados.
 - Sem código arbitrário (`eval`, `Function`) em expressões. Manter operações e atributos numa allowlist e adicionar limites de complexidade.
 - Mantenha compatibilidade de `from lmmp_charts import InterfacialChart, Wettability` e `InterfacialChart.generate()` retornando JSON Plotly por padrão.
@@ -22,7 +22,7 @@ Leia `docs/development/codex_handoff.md`, `docs/architecture/decisions.md` e `do
 
 ## Testes
 - Python: `PYTHONPATH=packages/python/src python -m unittest discover -s tests/python -p 'test_*.py' -v`
-- Playground: `PYTHONPATH=packages/python/src python -m unittest discover -s examples/standalone/interfacial_playground -p 'test_*.py' -v`
+- Playground: `PYTHONPATH=packages/python/src python -m unittest discover -s examples/standalone/interfacial_svg_playground -p 'test_*.py' -v`
 - TypeScript: `cd packages/typescript && npm test`
 - Python build: `cd packages/python && uv build` (pode ser `uv build --offline` com cache disponível).
 

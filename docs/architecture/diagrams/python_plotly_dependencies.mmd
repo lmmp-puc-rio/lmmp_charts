@@ -1,4 +1,5 @@
 ---
+title: Dependencias do backend Python Plotly
 config:
   theme: neutral
   class:
@@ -127,6 +128,7 @@ classDiagram
         +RENDER_CONFIG
     }
     class InterfacialBuilder {
+        <<rendering.plotly>>
         -_geometry: InterfacialGeometry
         -_flat_renderer: FlatInterfacePlotlyRenderer
         -_corner_renderer: CornerInterfacePlotlyRenderer
